@@ -1,7 +1,31 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        pathname: "/photos/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/videos/:path*",
+        headers: [
+          { key: "Accept-Ranges", value: "bytes" },
+          { key: "Cache-Control", value: "public, max-age=31536000" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
