@@ -28,7 +28,7 @@ export default function KitchenPage() {
 
       {/* ── VIDEO HERO ─────────────────────────────────────────── */}
       <VideoBackground
-        src="/videos/pizza-prep.mp4"
+        src={process.env.NEXT_PUBLIC_KITCHEN_VIDEO_URL ?? "/videos/pizza-prep.mp4"}
         overlay={0.52}
         height="92vh"
         style={{ minHeight: 520 }}
