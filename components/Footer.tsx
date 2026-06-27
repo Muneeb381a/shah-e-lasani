@@ -57,7 +57,6 @@ export default function Footer() {
                   fontSize: "0.52rem", marginTop: 2,
                   textAlign: "center", opacity: 0.6,
                 }}>
-                  Est. 2025
                 </div>
               </div>
             </div>

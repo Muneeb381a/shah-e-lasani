@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useTheme } from "@/lib/theme-context";
 
 const QUICK_STATS = [
@@ -70,14 +71,29 @@ export default function HeroSection() {
         </span>
       </div>
 
-      {/* Floating food emojis */}
+      {/* Floating logo images */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <span className="animate-float"  style={{ position: "absolute", top: "14%", left: "4%",   fontSize: 64, opacity: dark ? 0.13 : 0.18, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4))" }}>🍕</span>
-        <span className="animate-float2" style={{ position: "absolute", top: "10%", right: "5%",  fontSize: 54, opacity: dark ? 0.13 : 0.18, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4))" }}>🍔</span>
-        <span className="animate-float3" style={{ position: "absolute", bottom:"22%", left: "6%", fontSize: 46, opacity: dark ? 0.13 : 0.18, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4))" }}>🥤</span>
-        <span className="animate-float4" style={{ position: "absolute", bottom:"16%", right:"7%", fontSize: 52, opacity: dark ? 0.13 : 0.18, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4))" }}>🍟</span>
-        <span className="animate-float"  style={{ position: "absolute", top: "50%", left: "1%",   fontSize: 30, opacity: 0.07 }}>✨</span>
-        <span className="animate-float2" style={{ position: "absolute", top: "40%", right: "2%",  fontSize: 28, opacity: 0.07 }}>⭐</span>
+        {[
+          { cls: "animate-float",  top: "12%",  left:  "4%",   size: 72, op: dark ? 0.18 : 0.22 },
+          { cls: "animate-float2", top: "8%",   right: "5%",   size: 60, op: dark ? 0.15 : 0.2  },
+          { cls: "animate-float3", bottom:"20%",left:  "5%",   size: 52, op: dark ? 0.14 : 0.18 },
+          { cls: "animate-float4", bottom:"14%",right: "6%",   size: 64, op: dark ? 0.16 : 0.2  },
+        ].map((f, i) => (
+          <div key={i} className={f.cls} style={{
+            position: "absolute", ...( f.top    ? { top:    f.top    } : {}),
+                                       ...( f.bottom ? { bottom: f.bottom } : {}),
+                                       ...( f.left   ? { left:   f.left   } : {}),
+                                       ...( f.right  ? { right:  f.right  } : {}),
+            width: f.size, height: f.size,
+            borderRadius: Math.round(f.size * 0.28),
+            overflow: "hidden",
+            opacity: f.op,
+            background: "#fff",
+            boxShadow: "0 8px 32px rgba(228,0,43,0.25)",
+          }}>
+            <Image src="/shahelasani.png" alt="" fill sizes={`${f.size}px`} style={{ objectFit: "contain", padding: "6px" }} />
+          </div>
+        ))}
       </div>
 
       {/* ══ MAIN CONTENT ══ */}
@@ -114,17 +130,15 @@ export default function HeroSection() {
           lineHeight: 0.9, textTransform: "uppercase", margin: "0 0 24px",
         }}>
           <span style={{
-            display: "block", color: "var(--text-primary)",
+            display: "block", color: "#E4002B",
             fontSize: "clamp(2.6rem, 7vw, 5.8rem)", letterSpacing: "0.06em",
-            transition: "color 0.3s ease",
           }}>
             Shah-e-Lasani
           </span>
           <span style={{
-            display: "block",
+            display: "block", color: "var(--text-primary)",
             fontSize: "clamp(4rem, 13vw, 9.5rem)", letterSpacing: "0.03em",
-            background: "linear-gradient(125deg, #E4002B 0%, #ff3355 45%, #F5A623 100%)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            transition: "color 0.3s ease",
           }}>
             Cafe
           </span>

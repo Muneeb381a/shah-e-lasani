@@ -46,11 +46,12 @@ export default function AboutPage() {
             Our Story
           </p>
           <h1 style={{
-            fontFamily: "var(--font-oswald)", fontWeight: 900, color: "var(--text-primary)",
+            fontFamily: "var(--font-oswald)", fontWeight: 900,
             fontSize: "clamp(2.2rem, 6vw, 3.6rem)", textTransform: "uppercase",
             letterSpacing: "0.04em", lineHeight: 1, marginBottom: 16,
           }}>
-            Shah-e-Lasani Cafe
+            <span style={{ color: "#E4002B" }}>Shah-e-Lasani</span>{" "}
+            <span style={{ color: "var(--text-primary)" }}>Cafe</span>
           </h1>
           <div style={{ width: 60, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, margin: "0 auto 20px" }} />
           <p style={{ color: "var(--text-secondary)", fontSize: "1rem", maxWidth: 540, margin: "0 auto", lineHeight: 1.7 }}>

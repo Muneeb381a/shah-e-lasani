@@ -97,9 +97,12 @@ function MenuContent() {
         </div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <p style={{
-            color: "#E4002B", fontSize: "0.7rem", fontWeight: 700,
+            fontSize: "0.7rem", fontWeight: 700,
             letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: 12,
-          }}>Shah-e-Lasani Cafe</p>
+          }}>
+            <span style={{ color: "#E4002B" }}>Shah-e-Lasani</span>{" "}
+            <span style={{ color: "var(--text-primary)" }}>Cafe</span>
+          </p>
           <h1 style={{
             fontFamily: "var(--font-oswald)", fontWeight: 900, color: "var(--text-primary)",
             fontSize: "clamp(2.4rem, 6vw, 4rem)", textTransform: "uppercase",
