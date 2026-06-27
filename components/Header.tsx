@@ -101,28 +101,37 @@ export default function Header() {
               <div style={{
                 width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                 position: "relative", overflow: "hidden",
+                background: "#fff",
                 boxShadow: dark
                   ? "0 0 0 1.5px rgba(228,0,43,0.5), 0 4px 16px rgba(228,0,43,0.25)"
                   : "0 0 0 1.5px rgba(228,0,43,0.35), 0 4px 16px rgba(228,0,43,0.15)",
               }}>
-                <Image src="/shahelasani.png" alt="Shah-e-Lasani" fill sizes="44px" style={{ objectFit: "cover" }} priority />
+                <Image src="/shahelasani.png" alt="Shah-e-Lasani" fill sizes="44px" style={{ objectFit: "contain", padding: "3px" }} priority />
               </div>
-              <div>
+              <div style={{ display: "inline-block" }}>
                 <div style={{
                   fontFamily: "var(--font-oswald)", fontWeight: 800,
                   fontSize: "1.05rem", letterSpacing: "0.06em",
                   textTransform: "uppercase", lineHeight: 1,
-                  color: dark ? "#fff" : "#0d0d0d",
-                  transition: "color 0.3s",
+                  color: "#E4002B",
                 }}>
                   Shah-e-Lasani
                 </div>
-                <div style={{
-                  fontSize: "0.57rem", fontWeight: 700, marginTop: 3,
-                  letterSpacing: "0.28em", textTransform: "uppercase",
-                  color: "#F5A623",
-                }}>
-                  Cafe &middot; Est. 2025
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5, marginTop: 3 }}>
+                  <span style={{
+                    fontFamily: "var(--font-oswald)", fontWeight: 700,
+                    fontSize: "0.6rem", letterSpacing: "0.3em",
+                    textTransform: "uppercase",
+                    color: dark ? "#fff" : "#111",
+                  }}>Cafe</span>
+                  <span style={{ color: dark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.25)", fontSize: "0.5rem" }}>·</span>
+                  <span style={{
+                    fontFamily: "var(--font-oswald)", fontWeight: 600,
+                    fontSize: "0.57rem", letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: dark ? "#fff" : "#111",
+                    opacity: 0.6,
+                  }}>Est. 2025</span>
                 </div>
               </div>
             </Link>
@@ -373,15 +382,17 @@ export default function Header() {
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, overflow: "hidden", position: "relative", flexShrink: 0, boxShadow: "0 0 0 1.5px rgba(228,0,43,0.4)" }}>
-              <Image src="/shahelasani.png" alt="Logo" fill sizes="36px" style={{ objectFit: "cover" }} />
+            <div style={{ width: 36, height: 36, borderRadius: 10, overflow: "hidden", position: "relative", flexShrink: 0, background: "#fff", boxShadow: "0 0 0 1.5px rgba(228,0,43,0.4)" }}>
+              <Image src="/shahelasani.png" alt="Logo" fill sizes="36px" style={{ objectFit: "contain", padding: "2px" }} />
             </div>
-            <div>
-              <div style={{ fontFamily: "var(--font-oswald)", fontWeight: 700, fontSize: "0.95rem", color: dark ? "#fff" : "#0d0d0d", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <div style={{ display: "inline-block" }}>
+              <div style={{ fontFamily: "var(--font-oswald)", fontWeight: 800, fontSize: "0.95rem", color: "#E4002B", textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 1 }}>
                 Shah-e-Lasani
               </div>
-              <div style={{ fontSize: "0.55rem", color: "#F5A623", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase" }}>
-                Cafe · Est. 2025
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginTop: 3 }}>
+                <span style={{ fontFamily: "var(--font-oswald)", fontWeight: 700, fontSize: "0.57rem", color: dark ? "#fff" : "#111", letterSpacing: "0.28em", textTransform: "uppercase" }}>Cafe</span>
+                <span style={{ color: dark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.25)", fontSize: "0.48rem" }}>·</span>
+                <span style={{ fontFamily: "var(--font-oswald)", fontWeight: 600, fontSize: "0.55rem", color: dark ? "#fff" : "#111", opacity: 0.6, letterSpacing: "0.18em", textTransform: "uppercase" }}>Est. 2025</span>
               </div>
             </div>
           </div>

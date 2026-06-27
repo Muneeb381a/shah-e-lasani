@@ -22,31 +22,41 @@ export default function Footer() {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", marginBottom: 16, gap: 0 }}>
               {/* Logo image */}
               <div style={{
-                width: 54, height: 54, borderRadius: 16, overflow: "hidden",
+                width: 64, height: 64, borderRadius: 18, overflow: "hidden",
                 position: "relative", flexShrink: 0,
-                boxShadow: "0 4px 20px rgba(228,0,43,0.3), 0 0 0 2px rgba(228,0,43,0.2)",
-                marginBottom: 12,
+                boxShadow: "0 6px 24px rgba(228,0,43,0.25), 0 0 0 2px rgba(228,0,43,0.3)",
+                marginBottom: 14,
+                background: "#fff",
               }}>
-                <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="54px" style={{ objectFit: "cover" }} />
+                <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="64px" style={{ objectFit: "contain", padding: "4px" }} />
               </div>
-              {/* Name + Cafe wrapped so Cafe centers relative to name width */}
+              {/* Name stack */}
               <div style={{ display: "inline-block" }}>
                 <div style={{
                   fontFamily: "var(--font-oswald)", fontWeight: 800,
                   color: "#E4002B",
                   textTransform: "uppercase", letterSpacing: "0.08em",
-                  fontSize: "1rem", lineHeight: 1,
+                  fontSize: "1.05rem", lineHeight: 1,
                 }}>
                   Shah-e-Lasani
                 </div>
                 <div style={{
                   fontFamily: "var(--font-oswald)", fontWeight: 700,
                   color: "var(--text-primary)",
-                  textTransform: "uppercase", letterSpacing: "0.32em",
+                  textTransform: "uppercase", letterSpacing: "0.38em",
                   fontSize: "0.65rem", marginTop: 3,
                   textAlign: "center",
                 }}>
                   Cafe
+                </div>
+                <div style={{
+                  fontFamily: "var(--font-oswald)", fontWeight: 600,
+                  color: "var(--text-primary)",
+                  textTransform: "uppercase", letterSpacing: "0.18em",
+                  fontSize: "0.52rem", marginTop: 2,
+                  textAlign: "center", opacity: 0.6,
+                }}>
+                  Est. 2025
                 </div>
               </div>
             </div>
