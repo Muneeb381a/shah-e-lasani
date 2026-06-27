@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const STATS = [
-  { target: 500, suffix: "+",   label: "Orders Delivered",  icon: "📦", isDecimal: false },
+  { target: 15, suffix: "k+",   label: "Orders Delivered",  icon: "📦", isDecimal: false },
   { target: 4.9, suffix: "★",   label: "Customer Rating",   icon: "⭐", isDecimal: true  },
   { target: 30,  suffix: "min", label: "Avg Delivery Time", icon: "⚡", isDecimal: false },
   { target: 50,  suffix: "+",   label: "Menu Items",        icon: "🍽️", isDecimal: false },
