@@ -22,13 +22,14 @@ export default function Footer() {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", marginBottom: 16, gap: 0 }}>
               {/* Logo image */}
               <div style={{
-                width: 64, height: 64, borderRadius: 18, overflow: "hidden",
+                width: 80, height: 80, borderRadius: 20, overflow: "hidden",
                 position: "relative", flexShrink: 0,
                 boxShadow: "0 6px 24px rgba(228,0,43,0.25), 0 0 0 2px rgba(228,0,43,0.3)",
                 marginBottom: 14,
-                background: "#fff",
+                background: "#ffffff",
+                display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="64px" style={{ objectFit: "contain", padding: "4px" }} />
+                <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="80px" style={{ objectFit: "contain", padding: "8px" }} />
               </div>
               {/* Name stack */}
               <div style={{ display: "inline-block" }}>
