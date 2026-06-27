@@ -55,7 +55,7 @@ export default function AboutPage() {
           </h1>
           <div style={{ width: 60, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, margin: "0 auto 20px" }} />
           <p style={{ color: "var(--text-secondary)", fontSize: "1rem", maxWidth: 540, margin: "0 auto", lineHeight: 1.7 }}>
-            Serving Sialkot&apos;s finest pizzas, burgers, and more since March 2025. A family-run cafe built on passion, quality, and the love of great food.
+            Eat good Feel good that's why Shah-e-Lasani Cafe Serves good and hygienic food. A family-run cafe built on passion, quality, and the love of great food.
           </p>
         </FadeIn>
       </div>
