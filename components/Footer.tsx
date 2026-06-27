@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -18,22 +19,33 @@ export default function Footer() {
 
           {/* Brand */}
           <div style={{ gridColumn: "span 1" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", marginBottom: 16, gap: 0 }}>
+              {/* Logo image */}
               <div style={{
-                width: 42, height: 42, borderRadius: 14, background: "#E4002B",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "1.3rem", boxShadow: "0 4px 16px rgba(228,0,43,0.35)",
-              }}>🍕</div>
-              <div style={{ lineHeight: 1 }}>
+                width: 54, height: 54, borderRadius: 16, overflow: "hidden",
+                position: "relative", flexShrink: 0,
+                boxShadow: "0 4px 20px rgba(228,0,43,0.3), 0 0 0 2px rgba(228,0,43,0.2)",
+                marginBottom: 12,
+              }}>
+                <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="54px" style={{ objectFit: "cover" }} />
+              </div>
+              {/* Name + Cafe wrapped so Cafe centers relative to name width */}
+              <div style={{ display: "inline-block" }}>
                 <div style={{
-                  fontFamily: "var(--font-oswald)", fontWeight: 700,
-                  color: "var(--text-primary)", textTransform: "uppercase",
-                  letterSpacing: "0.08em", fontSize: "0.9rem",
-                  transition: "color 0.3s ease",
+                  fontFamily: "var(--font-oswald)", fontWeight: 800,
+                  color: "#E4002B",
+                  textTransform: "uppercase", letterSpacing: "0.08em",
+                  fontSize: "1rem", lineHeight: 1,
                 }}>
                   Shah-e-Lasani
                 </div>
-                <div style={{ color: "#F5A623", fontSize: "0.62rem", letterSpacing: "0.25em", textTransform: "uppercase", fontWeight: 600 }}>
+                <div style={{
+                  fontFamily: "var(--font-oswald)", fontWeight: 700,
+                  color: "var(--text-primary)",
+                  textTransform: "uppercase", letterSpacing: "0.32em",
+                  fontSize: "0.65rem", marginTop: 3,
+                  textAlign: "center",
+                }}>
                   Cafe
                 </div>
               </div>
