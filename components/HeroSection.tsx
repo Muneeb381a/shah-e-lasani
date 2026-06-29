@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const BG_IMAGE =
-  "https://www.magnific.com/free-photo/tasty-cheesy-pizza-blue-with-fresh-vegetables_10528600.htm#fromView=keyword&page=6&position=27&uuid=b7eceea0-7716-4bef-85f9-7f4a75ea6dc7&query=Pizza+shop+background";
+  "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1";
 
 export default function HeroSection() {
   return (
@@ -46,6 +46,13 @@ export default function HeroSection() {
         position: "absolute", bottom: 0, left: 0, right: 0,
         height: "35%",
         background: "linear-gradient(to top, rgba(228,0,43,0.18) 0%, transparent 100%)",
+      }} />
+      {/* Grid overlay */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        backgroundImage:
+          "linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px)",
+        backgroundSize: "72px 72px",
       }} />
 
       {/* ── Content ── */}
