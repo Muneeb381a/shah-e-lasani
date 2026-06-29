@@ -249,11 +249,12 @@ export default function AboutPage() {
           }}>
             {/* Logo in CTA */}
             <div style={{
-              width: 64, height: 64, borderRadius: 18, overflow: "hidden",
-              margin: "0 auto 16px", position: "relative",
-              boxShadow: "0 8px 32px rgba(228,0,43,0.3)",
+              width: 72, height: 72, borderRadius: 20, overflow: "hidden",
+              margin: "0 auto 20px", position: "relative",
+              background: "#ffffff",
+              boxShadow: "0 8px 32px rgba(228,0,43,0.3), 0 0 0 2px rgba(228,0,43,0.2)",
             }}>
-              <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="64px" style={{ objectFit: "cover" }} />
+              <Image src="/shahelasani.png" alt="Shah-e-Lasani Cafe" fill sizes="72px" style={{ objectFit: "contain", padding: "10px" }} />
             </div>
             <h3 style={{ color: "var(--text-primary)", fontFamily: "var(--font-oswald)", fontWeight: 700, fontSize: "1.6rem", margin: "0 0 10px" }}>
               Ready to taste the difference?
