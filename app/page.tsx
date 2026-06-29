@@ -55,26 +55,46 @@ export default function Home() {
       <HeroSection />
 
       {/* 2 ── TICKER ── */}
-      <div style={{ background: "#E4002B", overflow: "hidden", whiteSpace: "nowrap", padding: "12px 0" }}>
-        <div className="animate-ticker" style={{ display: "inline-flex" }}>
-          {[0, 1].map((n) => (
+      <div style={{
+        background: "#E4002B",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "13px 0",
+        borderTop: "1px solid rgba(255,255,255,0.12)",
+        borderBottom: "1px solid rgba(0,0,0,0.15)",
+      }}>
+        <div style={{ display: "inline-flex", animation: "ticker 28s linear infinite" }}>
+          {[0, 1, 2].map((n) => (
             <span key={n} style={{
-              display: "inline-flex", alignItems: "center", gap: 24,
-              color: "#fff", fontSize: "0.7rem", fontWeight: 700,
-              letterSpacing: "0.18em", textTransform: "uppercase", paddingRight: "4rem",
+              display: "inline-flex", alignItems: "center", gap: 0,
+              paddingRight: "3rem",
             }}>
-              <span>🔥 Free Delivery Above Rs. 1,000</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
-              <span>🍕 Fresh Made Daily</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
-              <span>⚡ 30 Min Delivery</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
-              <span>🎁 Amazing Deals Every Day</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
-              <span>📱 Order on WhatsApp</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
-              <span>💯 100% Fresh Ingredients</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>◆</span>
+              {[
+                { icon: "🔥", text: "Free Delivery Above Rs. 1,000" },
+                { icon: "🍕", text: "Fresh Made Every Order"        },
+                { icon: "⚡", text: "30 Min Delivery"               },
+                { icon: "🎁", text: "Amazing Deals Every Day"       },
+                { icon: "📱", text: "Order on WhatsApp"             },
+                { icon: "💯", text: "100% Fresh Ingredients"        },
+                { icon: "🍔", text: "Juicy Zinger Burgers"          },
+                { icon: "🍗", text: "Crispy Chicken Wings"          },
+              ].map((item, i) => (
+                <span key={i} style={{ display: "inline-flex", alignItems: "center" }}>
+                  <span style={{
+                    color: "#fff", fontSize: "0.72rem", fontWeight: 800,
+                    letterSpacing: "0.16em", textTransform: "uppercase",
+                    padding: "0 18px",
+                  }}>
+                    {item.icon}&nbsp;&nbsp;{item.text}
+                  </span>
+                  <span style={{
+                    color: "rgba(255,255,255,0.35)",
+                    fontSize: "0.6rem", padding: "0 4px",
+                  }}>
+                    ❙
+                  </span>
+                </span>
+              ))}
             </span>
           ))}
         </div>
