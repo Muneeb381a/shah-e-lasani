@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const BG_IMAGE =
-  "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1";
+  "https://www.magnific.com/free-photo/tasty-cheesy-pizza-blue-with-fresh-vegetables_10528600.htm#fromView=keyword&page=6&position=27&uuid=b7eceea0-7716-4bef-85f9-7f4a75ea6dc7&query=Pizza+shop+background";
 
 export default function HeroSection() {
   return (
