@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const BG_IMAGE =
-  "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1";
+  "https://img.magnific.com/free-photo/top-view-square-pizza-slices-with-copy-space_23-2149235620.jpg?semt=ais_hybrid&w=740&q=80";
 
 export default function HeroSection() {
   return (
