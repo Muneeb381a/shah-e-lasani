@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { useTheme } from "@/lib/theme-context";
 
@@ -22,6 +22,7 @@ export default function Header() {
   const { totalItems, dispatch } = useCart();
   const { theme, toggle }        = useTheme();
   const pathname                  = usePathname();
+  const searchParams              = useSearchParams();
   const [menuOpen, setMenuOpen]   = useState(false);
   const [scrolled, setScrolled]   = useState(false);
 
@@ -43,7 +44,25 @@ export default function Header() {
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    return pathname.startsWith(href.split("?")[0]);
+    const [hrefPath, hrefQuery] = href.split("?");
+    if (pathname !== hrefPath) return false;
+    if (hrefQuery) {
+      const params = new URLSearchParams(hrefQuery);
+      for (const [key, val] of params.entries()) {
+        if (searchParams.get(key) !== val) return false;
+      }
+      return true;
+    }
+    // No query in href — only active when no other NAV item with query matches current URL
+    return !NAV.some((n) => {
+      const [nPath, nQuery] = n.href.split("?");
+      if (!nQuery || nPath !== pathname) return false;
+      const nParams = new URLSearchParams(nQuery);
+      for (const [k, v] of nParams.entries()) {
+        if (searchParams.get(k) !== v) return false;
+      }
+      return true;
+    });
   };
 
   /* ── colours ── */

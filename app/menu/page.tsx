@@ -52,10 +52,15 @@ function MenuContent() {
   }, []);
 
   const getInitial = () => {
-    if (catParam === "deals")   return "cat-deals";
-    if (catParam === "pizzas")  return "cat-pizza";
-    if (catParam === "burgers") return "cat-burger";
-    return categories[0].id;
+    const map: Record<string, string> = {
+      deals:   "cat-deals",
+      pizzas:  "cat-pizza",
+      burgers: "cat-burger",
+      wings:   "cat-wings",
+      sides:   "cat-sides",
+      drinks:  "cat-drinks",
+    };
+    return (catParam && map[catParam]) || categories[0].id;
   };
 
   const [active, setActive] = useState(getInitial);

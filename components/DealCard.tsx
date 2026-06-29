@@ -3,34 +3,24 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart } from "@/lib/cart-context";
+import { Product } from "@/data/menu";
 
 function px(id: number) {
   return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=480&h=320&dpr=1`;
 }
 const DEAL_DEFAULT_IMG = px(9872916);
-import { useTheme } from "@/lib/theme-context";
-import { Product } from "@/data/menu";
 
-const THEMES = [
-  { headerBg: "#E4002B", emoji: "🔥", glow: "rgba(228,0,43,0.28)",   accent: "#E4002B" },
-  { headerBg: "#7c3aed", emoji: "⚡", glow: "rgba(124,58,237,0.28)",  accent: "#7c3aed" },
-  { headerBg: "#059669", emoji: "🎉", glow: "rgba(5,150,105,0.28)",   accent: "#059669" },
-  { headerBg: "#d97706", emoji: "🎁", glow: "rgba(217,119,6,0.28)",   accent: "#d97706" },
-];
-
-export default function DealCard({ deal, index = 0 }: { deal: Product; index?: number }) {
+export default function DealCard({ deal }: { deal: Product; index?: number }) {
   const { dispatch } = useCart();
-  const { theme } = useTheme();
-  const dark = theme === "dark";
 
-  const [added, setAdded]     = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [imgErr, setImgErr]   = useState(false);
+  const [added, setAdded]   = useState(false);
+  const [imgErr, setImgErr] = useState(false);
 
-  const t         = THEMES[index % THEMES.length];
-  const original  = (deal as Product & { originalPrice?: number }).originalPrice;
-  const savings   = original ? original - deal.basePrice : null;
-  const savePct   = original ? Math.round(((original - deal.basePrice) / original) * 100) : null;
+  const original = (deal as Product & { originalPrice?: number }).originalPrice;
+  const savePct  = original ? Math.round(((original - deal.basePrice) / original) * 100) : null;
+  const savings  = original ? original - deal.basePrice : null;
+
+  const imgSrc = deal.image || DEAL_DEFAULT_IMG;
 
   function addToCart() {
     dispatch({
@@ -44,178 +34,121 @@ export default function DealCard({ deal, index = 0 }: { deal: Product; index?: n
 
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         background: "var(--bg-card)",
-        border: `1px solid ${hovered ? `${t.accent}70` : "var(--border-card)"}`,
-        borderRadius: 22, overflow: "hidden",
+        border: "1px solid var(--border-card)",
+        borderRadius: 16, overflow: "hidden",
         display: "flex", flexDirection: "column",
-        transform: hovered ? "translateY(-10px) scale(1.015)" : "translateY(0) scale(1)",
-        boxShadow: hovered
-          ? `0 28px 60px ${t.glow}, 0 8px 24px var(--shadow-card)`
-          : `0 2px 12px var(--shadow-card)`,
-        transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, border-color 0.25s ease",
-        cursor: "pointer",
-        position: "relative",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)";
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 20px 48px rgba(228,0,43,0.15)";
+        (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(228,0,43,0.35)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-card)";
       }}
     >
-      {/* ── Top accent bar ── */}
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 3,
-        background: `linear-gradient(90deg, ${t.headerBg}, ${t.headerBg}88)`,
-        opacity: hovered ? 1 : 0.4,
-        transition: "opacity 0.3s ease",
-        zIndex: 2,
-      }} />
-
-      {/* ── Savings badge ── */}
-      {savePct && (
-        <div style={{
-          position: "absolute", top: 12, right: 12,
-          background: "#F5A623", color: "#000",
-          fontSize: "0.65rem", fontWeight: 900,
-          padding: "5px 11px", borderRadius: 999,
-          letterSpacing: "0.06em", zIndex: 3,
-          boxShadow: "0 2px 10px rgba(245,166,35,0.5)",
-        }}>
-          -{savePct}% OFF
-        </div>
-      )}
-
-      {/* ── Coloured header strip ── */}
-      <div style={{
-        background: `linear-gradient(135deg, ${t.headerBg}, ${t.headerBg}cc)`,
-        padding: "12px 16px",
-        display: "flex", alignItems: "center", gap: 8,
-      }}>
-        <span style={{ fontSize: "1.1rem" }}>{t.emoji}</span>
-        <span style={{
-          fontFamily: "var(--font-oswald)", fontWeight: 700,
-          color: "#fff", fontSize: "0.68rem",
-          letterSpacing: "0.2em", textTransform: "uppercase",
-        }}>
-          Special Deal
-        </span>
-      </div>
-
-      {/* ── Image / Emoji showcase ── */}
-      {(deal.image || DEAL_DEFAULT_IMG) && !imgErr ? (
-        <div style={{
-          height: 160, position: "relative", overflow: "hidden", background: "#111",
-        }}>
+      {/* ── Image ── */}
+      <div style={{ position: "relative", height: 190, overflow: "hidden", background: "var(--bg-surface)", flexShrink: 0 }}>
+        {!imgErr ? (
           <Image
-            src={deal.image || DEAL_DEFAULT_IMG}
+            src={imgSrc}
             alt={deal.name}
             fill
             sizes="(max-width: 600px) 100vw, 320px"
-            style={{
-              objectFit: "cover",
-              transform: hovered ? "scale(1.08)" : "scale(1)",
-              transition: "transform 0.5s ease",
-            }}
+            style={{ objectFit: "cover", transition: "transform 0.4s ease" }}
             onError={() => setImgErr(true)}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.06)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
           />
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.05) 60%)",
-          }} />
-        </div>
-      ) : (
-        <div style={{
-          height: 130,
-          background: dark
-            ? `radial-gradient(circle at 50% 60%, ${t.headerBg}22 0%, transparent 70%), #0e0e0e`
-            : `radial-gradient(circle at 50% 60%, ${t.headerBg}14 0%, transparent 70%), #f8f8f8`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          position: "relative", overflow: "hidden",
-          transition: "background 0.3s ease",
-        }}>
-          <div style={{
-            position: "absolute", width: 110, height: 110, borderRadius: "50%",
-            border: `1px solid ${dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"}`,
-          }} />
-          <div style={{
-            position: "absolute", width: 155, height: 155, borderRadius: "50%",
-            border: `1px solid ${dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.04)"}`,
-          }} />
-          <span className="animate-float3" style={{
-            fontSize: 62,
-            filter: dark
-              ? "drop-shadow(0 8px 20px rgba(0,0,0,0.8))"
-              : "drop-shadow(0 6px 16px rgba(0,0,0,0.2))",
-            position: "relative", zIndex: 1,
-            transform: hovered ? "scale(1.1)" : "scale(1)",
-            transition: "transform 0.3s ease",
-            display: "inline-block",
-          }}>
-            {t.emoji}
-          </span>
-        </div>
-      )}
+        ) : (
+          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: 60, opacity: 0.35 }}>🔥</span>
+          </div>
+        )}
 
-      {/* ── Content ── */}
-      <div style={{ padding: "18px 20px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* DEAL badge */}
+        <div style={{
+          position: "absolute", top: 12, left: 12,
+          background: "#E4002B", color: "#fff",
+          fontSize: "0.6rem", fontWeight: 800,
+          letterSpacing: "0.18em", textTransform: "uppercase",
+          padding: "4px 10px", borderRadius: 999,
+        }}>
+          Hot Deal
+        </div>
+
+        {/* Savings badge */}
+        {savePct && (
+          <div style={{
+            position: "absolute", top: 12, right: 12,
+            background: "#F5A623", color: "#000",
+            fontSize: "0.65rem", fontWeight: 900,
+            padding: "4px 10px", borderRadius: 999,
+            letterSpacing: "0.05em",
+          }}>
+            -{savePct}% OFF
+          </div>
+        )}
+      </div>
+
+      {/* ── Body ── */}
+      <div style={{ padding: "16px 18px 18px", display: "flex", flexDirection: "column", flex: 1 }}>
         <h3 style={{
           fontFamily: "var(--font-oswald)", fontWeight: 700,
-          color: "var(--text-primary)",
-          fontSize: "1.15rem", marginBottom: 6, lineHeight: 1.2,
-          transition: "color 0.3s ease",
+          color: "var(--text-primary)", fontSize: "1.08rem",
+          lineHeight: 1.25, marginBottom: 6,
         }}>
           {deal.name}
         </h3>
         <p style={{
-          color: "var(--text-muted)",
-          fontSize: "0.78rem", lineHeight: 1.6, flex: 1, marginBottom: 18,
-          transition: "color 0.3s ease",
+          color: "var(--text-muted)", fontSize: "0.78rem", lineHeight: 1.6,
+          flex: 1, marginBottom: 14,
+          display: "-webkit-box", WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical", overflow: "hidden",
         }}>
           {deal.description}
         </p>
 
-        {/* Price + savings */}
+        {/* Price row */}
         <div style={{
-          paddingTop: 14,
-          borderTop: "1px solid var(--border-subtle)",
-          display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8,
+          paddingTop: 12, borderTop: "1px solid var(--border-subtle)",
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
         }}>
           <div>
             {original && (
               <div style={{
-                color: "var(--text-faint)",
-                fontFamily: "var(--font-oswald)",
-                fontSize: "0.88rem", textDecoration: "line-through",
-                marginBottom: 2,
-                transition: "color 0.3s ease",
+                fontFamily: "var(--font-oswald)", fontSize: "0.82rem",
+                color: "var(--text-muted)", textDecoration: "line-through", marginBottom: 2,
               }}>
                 Rs. {original.toLocaleString()}
               </div>
             )}
-            <div style={{
-              fontFamily: "var(--font-oswald)", fontWeight: 900,
-              fontSize: "1.55rem", color: "#F5A623", lineHeight: 1,
-            }}>
+            <div style={{ fontFamily: "var(--font-oswald)", fontWeight: 900, fontSize: "1.4rem", color: "#E4002B", lineHeight: 1 }}>
               Rs. {deal.basePrice.toLocaleString()}
             </div>
             {savings && (
-              <div style={{ color: "#4ade80", fontSize: "0.68rem", fontWeight: 700, marginTop: 3 }}>
+              <div style={{ color: "#16a34a", fontSize: "0.68rem", fontWeight: 700, marginTop: 3 }}>
                 Save Rs. {savings.toLocaleString()}
               </div>
             )}
           </div>
-
           <button
             onClick={addToCart}
             style={{
               background: added ? "#16a34a" : "#E4002B",
               color: "#fff", border: "none", cursor: "pointer",
-              padding: "10px 20px", borderRadius: 999,
+              padding: "10px 22px", borderRadius: 999,
               fontFamily: "var(--font-oswald)", fontWeight: 700, fontSize: "0.85rem",
-              boxShadow: added ? "none" : "0 4px 20px rgba(228,0,43,0.4)",
-              transform: added ? "scale(0.95)" : "scale(1)",
-              transition: "all 0.2s ease", whiteSpace: "nowrap",
+              boxShadow: added ? "none" : "0 4px 16px rgba(228,0,43,0.35)",
+              transition: "all 0.18s ease", whiteSpace: "nowrap",
             }}
           >
-            {added ? "✓ Added!" : "Order Deal"}
+            {added ? "✓ Added!" : "Order Now"}
           </button>
         </div>
       </div>
