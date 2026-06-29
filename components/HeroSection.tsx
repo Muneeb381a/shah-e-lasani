@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const BG_IMAGE =
-  "https://img.magnific.com/free-photo/top-view-square-pizza-slices-with-copy-space_23-2149235620.jpg?semt=ais_hybrid&w=740&q=80";
+  "https://res.cloudinary.com/dko2nywrn/image/upload/v1782745693/ChatGPT_Image_Jun_29_2026_08_07_38_PM_jtp3c4.png";
 
 export default function HeroSection() {
   return (
@@ -100,7 +100,7 @@ export default function HeroSection() {
             Shah-e-Lasani
           </span>
           <span style={{
-            display: "block", color: "#ffffff",
+            display: "block", color: "#000000",
             fontSize: "clamp(4.5rem, 12vw, 9.5rem)",
             letterSpacing: "0.02em",
             textShadow: "0 4px 40px rgba(0,0,0,0.5)",

@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: "img.magnific.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
