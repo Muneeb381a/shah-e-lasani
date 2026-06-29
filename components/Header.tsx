@@ -11,9 +11,9 @@ const NAV = [
   { href: "/",               label: "Home"       },
   { href: "/menu",           label: "Menu"       },
   { href: "/menu-board",     label: "Menu Board" },
-  { href: "/about",          label: "About"      },
   { href: "/kitchen",        label: "Kitchen"    },
   { href: "/menu?cat=deals", label: "Deals", hot: true },
+  { href: "/about",          label: "About"      },
 ];
 
 const WA = "https://wa.me/923254695624";
