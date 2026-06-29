@@ -64,7 +64,7 @@ export default function Home() {
                   <span style={{
                     fontFamily: "var(--font-oswald)",
                     color: "#fff",
-                    fontSize: "0.72rem",
+                    fontSize: "0.85rem",
                     fontWeight: 500,
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
