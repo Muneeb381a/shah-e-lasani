@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { useTheme } from "@/lib/theme-context";
@@ -18,7 +18,7 @@ const NAV = [
 
 const WA = "https://wa.me/923254695624";
 
-export default function Header() {
+function HeaderContent() {
   const { totalItems, dispatch } = useCart();
   const { theme, toggle }        = useTheme();
   const pathname                  = usePathname();
@@ -541,5 +541,13 @@ export default function Header() {
         }
       `}</style>
     </>
+  );
+}
+
+export default function Header() {
+  return (
+    <Suspense fallback={<div style={{ height: 32, background: "#E4002B" }} />}>
+      <HeaderContent />
+    </Suspense>
   );
 }
