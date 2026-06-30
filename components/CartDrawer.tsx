@@ -120,6 +120,15 @@ export default function CartDrawer() {
                     {item.size && (
                       <p style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>{item.size}</p>
                     )}
+                    {item.notes && (
+                      <p style={{
+                        color: "var(--text-muted)", fontSize: "0.67rem",
+                        lineHeight: 1.45, marginTop: 4,
+                        background: "rgba(228,0,43,0.06)",
+                        border: "1px solid rgba(228,0,43,0.14)",
+                        borderRadius: 6, padding: "4px 8px",
+                      }}>{item.notes}</p>
+                    )}
                     <p style={{ color: "#F5A623", fontSize: "0.9rem", fontWeight: 700, marginTop: 3 }}>
                       Rs. {(item.price * item.quantity).toLocaleString()}
                     </p>

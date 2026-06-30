@@ -5,21 +5,21 @@ import VideoBackground from "@/components/VideoBackground";
 import Link from "next/link";
 
 const STEPS = [
-  { step: "01", icon: "🌾", title: "Fresh Ingredients",    desc: "Every morning we source fresh vegetables, premium meats, and imported cheese. Nothing sits in a freezer overnight." },
-  { step: "02", icon: "🫙", title: "House-Made Sauces",    desc: "Our signature pizza sauce, garlic mayo, and spice blends are made in-house daily from secret family recipes." },
-  { step: "03", icon: "🔥", title: "High-Heat Cooking",    desc: "Pizzas go into a 450°C oven for a perfectly crisp crust. Burgers are smashed on a screaming-hot flat top for maximum caramelisation." },
-  { step: "04", icon: "🍕", title: "Assembled to Order",   desc: "Every order is assembled fresh at the time you place it — never pre-made, never sitting under a heat lamp." },
-  { step: "05", icon: "📦", title: "Packed Hot",            desc: "Insulated packaging keeps your food at the right temperature from our kitchen to your door." },
-  { step: "06", icon: "🚀", title: "Fast Delivery",        desc: "Our riders leave within minutes of your order. Hot food, fast — that's our promise." },
+  { step: "01", title: "Fresh Ingredients",    desc: "Every morning we source fresh vegetables, premium meats, and imported cheese. Nothing sits in a freezer overnight." },
+  { step: "02", title: "House-Made Sauces",    desc: "Our signature pizza sauce, garlic mayo, and spice blends are made in-house daily from secret family recipes." },
+  { step: "03", title: "High-Heat Cooking",    desc: "Pizzas go into a 450°C oven for a perfectly crisp crust. Burgers are smashed on a screaming-hot flat top for maximum caramelisation." },
+  { step: "04", title: "Assembled to Order",   desc: "Every order is assembled fresh at the time you place it — never pre-made, never sitting under a heat lamp." },
+  { step: "05", title: "Packed Hot",            desc: "Insulated packaging keeps your food at the right temperature from our kitchen to your door." },
+  { step: "06", title: "Fast Delivery",        desc: "Our riders leave within minutes of your order. Hot food, fast — that's our promise." },
 ];
 
 const HYGIENE = [
-  { icon: "🧤", text: "Gloves worn at all times during food prep" },
-  { icon: "🧼", text: "Hands washed every 30 minutes" },
-  { icon: "🌡️", text: "Fridge & freezer temps logged twice daily" },
-  { icon: "🧹", text: "Full kitchen deep-clean every night" },
-  { icon: "✅", text: "All staff hold valid food safety certificates" },
-  { icon: "🚫", text: "Zero tolerance for cross-contamination" },
+  "Gloves worn at all times during food prep",
+  "Hands washed every 30 minutes",
+  "Fridge & freezer temps logged twice daily",
+  "Full kitchen deep-clean every night",
+  "All staff hold valid food safety certificates",
+  "Zero tolerance for cross-contamination",
 ];
 
 export default function KitchenPage() {
@@ -165,7 +165,6 @@ export default function KitchenPage() {
                   color: "#E4002B", fontSize: "0.85rem",
                 }}>{s.step}</div>
                 <div>
-                  <div style={{ fontSize: "1.4rem", marginBottom: 6 }}>{s.icon}</div>
                   <h3 style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.95rem", margin: "0 0 8px" }}>{s.title}</h3>
                   <p style={{ color: "var(--text-secondary)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
                 </div>
@@ -185,22 +184,22 @@ export default function KitchenPage() {
               fontFamily: "var(--font-oswald)", fontWeight: 800, color: "var(--text-primary)",
               fontSize: "1.6rem", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8,
             }}>
-              🧹 Hygiene <span style={{ color: "#E4002B" }}>Standards</span>
+              Hygiene <span style={{ color: "#E4002B" }}>Standards</span>
             </h2>
             <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginBottom: 24 }}>
               We maintain the highest food safety standards — because your health is not negotiable.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-              {HYGIENE.map((h) => (
-                <div key={h.text} style={{
+              {HYGIENE.map((text) => (
+                <div key={text} style={{
                   display: "flex", alignItems: "flex-start", gap: 12,
                   padding: "12px 16px",
                   background: "rgba(37,211,102,0.06)",
                   border: "1px solid rgba(37,211,102,0.15)",
                   borderRadius: 10,
                 }}>
-                  <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{h.icon}</span>
-                  <span style={{ color: "var(--text-secondary)", fontSize: "0.83rem", lineHeight: 1.5 }}>{h.text}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, flexShrink: 0, marginTop: 2 }}><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style={{ color: "var(--text-secondary)", fontSize: "0.83rem", lineHeight: 1.5 }}>{text}</span>
                 </div>
               ))}
             </div>
@@ -221,9 +220,11 @@ export default function KitchenPage() {
               width: 80, height: 80, borderRadius: "50%",
               background: "linear-gradient(135deg,#E4002B,#b80022)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "2.2rem", flexShrink: 0,
+              flexShrink: 0,
               boxShadow: "0 8px 32px rgba(228,0,43,0.35)",
-            }}>👨‍🍳</div>
+              fontFamily: "var(--font-oswald)", fontWeight: 800,
+              color: "#fff", fontSize: "1.4rem", letterSpacing: "0.04em",
+            }}>HC</div>
             <div>
               <blockquote style={{
                 color: "var(--text-primary)", fontSize: "1rem", fontStyle: "italic",
@@ -251,7 +252,7 @@ export default function KitchenPage() {
               boxShadow: "0 6px 24px rgba(228,0,43,0.4)",
               display: "inline-block",
             }}>
-              Order Now 🍕
+              Order Now
             </Link>
           </div>
         </FadeIn>

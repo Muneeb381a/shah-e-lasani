@@ -189,6 +189,9 @@ html.light {
   ::-webkit-scrollbar        { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track  { background: var(--bg-page); }
   ::-webkit-scrollbar-thumb  { background: #E4002B; border-radius: 3px; }
+
+  /* Hide scrollbar on category tab rows */
+  .sl-tabs-scroll::-webkit-scrollbar { display: none; }
 }
 
 /* ══════════════════════════════════════════════════════════════

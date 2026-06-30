@@ -2,13 +2,6 @@
 
 import { Category } from "@/data/menu";
 
-const CATEGORY_EMOJI: Record<string, string> = {
-  "cat-deals":  "🔥",
-  "cat-pizza":  "🍕",
-  "cat-burger": "🍔",
-  "cat-sides":  "🍟",
-  "cat-drinks": "🥤",
-};
 
 export default function CategoryTabs({
   categories,
@@ -34,7 +27,6 @@ export default function CategoryTabs({
               color: isActive ? "#ffffff" : "#9ca3af",
             }}
           >
-            <span>{CATEGORY_EMOJI[cat.id] ?? "🍽️"}</span>
             {cat.name}
           </button>
         );

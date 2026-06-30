@@ -99,16 +99,25 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
               {[
-                { href: "/",                label: "Home"        },
-                { href: "/menu",            label: "Full Menu"   },
-                { href: "/menu?cat=deals",  label: "Deals 🔥"   },
-                { href: "/menu?cat=pizzas", label: "Pizzas 🍕"   },
-                { href: "/menu?cat=burgers",label: "Burgers 🍔"  },
+                { href: "/",                       label: "HOME"             },
+                { href: "/menu",                   label: "FULL MENU"        },
+                { href: "/menu?cat=deals",         label: "DEALS"            },
+                { href: "/menu?cat=fries",         label: "FRIES"            },
+                { href: "/menu?cat=crunchy",       label: "CRUNCHY AND CRISPY" },
+                { href: "/menu?cat=pastas",        label: "PASTAS"           },
+                { href: "/menu?cat=burger",        label: "BURGER"           },
+                { href: "/menu?cat=wrap",          label: "WRAP AND ROLL"    },
+                { href: "/menu?cat=slice",         label: "SLICE AND STICK"  },
+                { href: "/menu?cat=pizza",         label: "PIZZA"            },
+                { href: "/menu?cat=serving",       label: "SERVING"          },
+                { href: "/menu?cat=beverages",     label: "BEVERAGES"        },
+                { href: "/menu?cat=cold",          label: "COLD AND SWEET"   },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} style={{
-                    color: "var(--text-muted)", fontSize: "0.84rem",
+                    color: "var(--text-muted)", fontSize: "0.78rem",
                     textDecoration: "none", transition: "color 0.2s",
+                    fontFamily: "var(--font-oswald)", letterSpacing: "0.06em",
                   }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#E4002B"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-muted)"; }}

@@ -13,12 +13,12 @@ function px(id: number) {
 }
 
 const CATEGORIES = [
-  { id: "cat-pizza",  name: "Pizzas",  slug: "pizzas",  img: px(9993754)  },
-  { id: "cat-burger", name: "Burgers", slug: "burgers", img: px(36007382) },
-  { id: "cat-wings",  name: "Wings",   slug: "wings",   img: px(2299981)  },
-  { id: "cat-sides",  name: "Sides",   slug: "sides",   img: px(5652266)  },
-  { id: "cat-drinks", name: "Drinks",  slug: "drinks",  img: px(5374420)  },
-  { id: "cat-deals",  name: "Deals",   slug: "deals",   img: px(9872916)  },
+  { id: "cat-pizza",     name: "Pizza",             slug: "pizza",     img: px(9993754)  },
+  { id: "cat-burger",    name: "Burger",            slug: "burger",    img: px(36007382) },
+  { id: "cat-crunchy",   name: "Crunchy and Crispy",slug: "crunchy",   img: px(2299981)  },
+  { id: "cat-fries",     name: "Fries",             slug: "fries",     img: px(36879180) },
+  { id: "cat-wrap",      name: "Wrap and Roll",     slug: "wrap",      img: px(18177341) },
+  { id: "cat-deals",     name: "Deals",             slug: "deals",     img: px(9872916)  },
 ];
 
 export default function Home() {
@@ -41,9 +41,30 @@ export default function Home() {
         padding: "10px 0",
         borderBottom: "1px solid rgba(0,0,0,0.12)",
       }}>
-        <div style={{ display: "inline-flex", alignItems: "center", animation: "ticker 40s linear infinite" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", animation: "ticker 48s linear infinite" }}>
           {[0, 1].map((n) => (
             <span key={n} style={{ display: "inline-flex", alignItems: "center" }}>
+
+              {/* highlighted phrase */}
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 0, padding: "0 36px" }}>
+                {["Pizza", "Burgers", "Wings", "Deals"].map((item, i, arr) => (
+                  <span key={item} style={{ display: "inline-flex", alignItems: "center" }}>
+                    <span style={{
+                      fontFamily: "var(--font-oswald)", fontWeight: 700,
+                      color: "#fff", fontSize: "0.88rem",
+                      letterSpacing: "0.14em", textTransform: "uppercase",
+                    }}>{item}</span>
+                    {i < arr.length - 1 && (
+                      <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", padding: "0 10px" }}>·</span>
+                    )}
+                  </span>
+                ))}
+                <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.78rem", fontStyle: "italic", fontFamily: "var(--font-open-sans)", letterSpacing: "0.04em", paddingLeft: 14 }}>
+                  — crafted fresh every order
+                </span>
+              </span>
+
+              {/* regular items */}
               {[
                 "Free Delivery Above Rs. 1,000",
                 "Fresh Made Every Order",
@@ -51,28 +72,17 @@ export default function Home() {
                 "Amazing Deals Every Day",
                 "Order on WhatsApp · 0325-4695624",
                 "100% Fresh Ingredients",
-                "Juicy Zinger Burgers",
-                "Crispy Chicken Wings",
               ].map((text, i) => (
                 <span key={i} style={{ display: "inline-flex", alignItems: "center" }}>
+                  <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.45rem", padding: "0 32px", lineHeight: 1 }}>★</span>
                   <span style={{
-                    color: "rgba(255,255,255,0.35)",
-                    fontSize: "0.5rem",
-                    padding: "0 28px",
-                    lineHeight: 1,
-                  }}>★</span>
-                  <span style={{
-                    fontFamily: "var(--font-oswald)",
-                    color: "#fff",
-                    fontSize: "0.85rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                  }}>
-                    {text}
-                  </span>
+                    fontFamily: "var(--font-oswald)", color: "#fff",
+                    fontSize: "0.85rem", fontWeight: 500,
+                    letterSpacing: "0.18em", textTransform: "uppercase",
+                  }}>{text}</span>
                 </span>
               ))}
+
             </span>
           ))}
         </div>

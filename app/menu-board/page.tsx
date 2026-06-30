@@ -167,7 +167,7 @@ export default function MenuBoardPage() {
                   display: "inline-block",
                 }}
               >
-                Order Online 🍕
+                Order Online
               </Link>
               <a
                 href="https://wa.me/923254695624?text=Assalam%20o%20Alaikum%2C%20I%20want%20to%20place%20an%20order"

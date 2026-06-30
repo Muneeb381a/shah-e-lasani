@@ -101,7 +101,9 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 64, opacity: 0.4 }}>🍽️</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" style={{ width: 52, height: 52, opacity: 0.25, color: "var(--text-muted)" }}>
+              <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><circle cx="12" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/>
+            </svg>
           </div>
         )}
         {/* Category tag */}

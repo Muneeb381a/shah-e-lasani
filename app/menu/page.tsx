@@ -1,74 +1,61 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { products as staticProducts, categories as staticCategories } from "@/data/menu";
 import ProductCard from "@/components/ProductCard";
 import DealCard from "@/components/DealCard";
 import FadeIn from "@/components/FadeIn";
-import type { Product, Category } from "@/data/menu";
 
-const CAT_EMOJI: Record<string, string> = {
-  "cat-deals":  "🔥",
-  "cat-pizza":  "🍕",
-  "cat-burger": "🍔",
-  "cat-wings":  "🍗",
-  "cat-sides":  "🍟",
-  "cat-drinks": "🥤",
-};
 
 function MenuContent() {
   const searchParams = useSearchParams();
   const catParam = searchParams.get("cat");
 
-  const [categories, setCategories] = useState<Category[]>(staticCategories);
-  const [products,   setProducts]   = useState<Product[]>(staticProducts);
-
-  useEffect(() => {
-    fetch("/api/menu")
-      .then((r) => r.json())
-      .then((data: { id: string; name: string; items: { id: string; name: string; description: string; price: number; originalPrice?: number; isDeal: boolean; categoryId: string; sizes?: { label: string; price: number }[] }[] }[]) => {
-        // Reshape API response to match static Product/Category format
-        const cats: Category[] = data.map((c, i) => ({
-          id: c.id, name: c.name, slug: c.id.replace("cat-", ""), order: i,
-        }));
-        const prods: Product[] = data.flatMap((c) =>
-          c.items.map((item) => ({
-            id:            item.id,
-            name:          item.name,
-            description:   item.description,
-            basePrice:     item.price,
-            originalPrice: item.originalPrice,
-            isAvailable:   true,
-            isDeal:        item.isDeal,
-            categoryId:    item.categoryId,
-            sizes:         item.sizes,
-            image:         (item as { image?: string }).image,
-          }))
-        );
-        if (cats.length > 0) { setCategories(cats); setProducts(prods); }
-      })
-      .catch(() => { /* keep static data */ });
-  }, []);
+  const categories = staticCategories;
+  const products = staticProducts;
 
   const getInitial = () => {
     const map: Record<string, string> = {
-      deals:   "cat-deals",
-      pizzas:  "cat-pizza",
-      burgers: "cat-burger",
-      wings:   "cat-wings",
-      sides:   "cat-sides",
-      drinks:  "cat-drinks",
+      deals:     "cat-deals",
+      fries:     "cat-fries",
+      crunchy:   "cat-crunchy",
+      pastas:    "cat-pasta",
+      burger:    "cat-burger",
+      wrap:      "cat-wrap",
+      slice:     "cat-slice",
+      pizza:     "cat-pizza",
+      serving:   "cat-serving",
+      beverages: "cat-beverages",
+      cold:      "cat-cold",
+      // legacy slugs
+      pizzas:    "cat-pizza",
+      burgers:   "cat-burger",
+      wings:     "cat-crunchy",
+      sides:     "cat-fries",
+      drinks:    "cat-beverages",
     };
     return (catParam && map[catParam]) || categories[0].id;
   };
 
   const [active, setActive] = useState(getInitial);
+  const tabsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setActive(getInitial());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catParam]);
+
+  // Auto-scroll active tab into center view
+  useEffect(() => {
+    const container = tabsRef.current;
+    if (!container) return;
+    const activeBtn = container.querySelector<HTMLButtonElement>("[data-active='true']");
+    if (!activeBtn) return;
+    const cRect = container.getBoundingClientRect();
+    const bRect = activeBtn.getBoundingClientRect();
+    container.scrollBy({ left: bRect.left - cRect.left - cRect.width / 2 + bRect.width / 2, behavior: "smooth" });
+  }, [active]);
 
   const visible    = products.filter((p) => p.categoryId === active && p.isAvailable);
   const isDeals    = active === "cat-deals";
@@ -133,46 +120,100 @@ function MenuContent() {
         <div style={{
           position: "sticky", top: 64, zIndex: 10,
           background: "var(--bg-page)",
-          padding: "16px 0",
           borderBottom: "1px solid var(--border-subtle)",
           marginBottom: 32,
           transition: "background 0.3s ease",
         }}>
-          <div style={{
-            display: "flex", gap: 8, overflowX: "auto",
-            paddingBottom: 4, scrollbarWidth: "none",
-          }}>
-            {categories.map((cat) => {
-              const isActive = cat.id === active;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActive(cat.id)}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 7,
-                    padding: "10px 20px", borderRadius: 999, border: "1px solid",
-                    borderColor: isActive ? "#E4002B" : "var(--border-card)",
-                    background: isActive ? "#E4002B" : "var(--bg-card)",
-                    color: isActive ? "#fff" : "var(--text-muted)",
-                    fontFamily: "var(--font-open-sans)", fontWeight: 600,
-                    fontSize: "0.82rem", cursor: "pointer", whiteSpace: "nowrap",
-                    transition: "all 0.25s ease",
-                    boxShadow: isActive ? "0 4px 16px rgba(228,0,43,0.35)" : "none",
-                    transform: isActive ? "scale(1.04)" : "scale(1)",
-                  }}
-                >
-                  <span style={{ fontSize: "1rem" }}>{CAT_EMOJI[cat.id] ?? "🍽️"}</span>
-                  {cat.name}
-                </button>
-              );
-            })}
+          {/* Scroll wrapper with fade edges */}
+          <div style={{ position: "relative" }}>
+            {/* Left fade */}
+            <div style={{
+              position: "absolute", left: 0, top: 0, bottom: 0, width: 40, zIndex: 2,
+              background: "linear-gradient(to right, var(--bg-page) 30%, transparent)",
+              pointerEvents: "none",
+            }} />
+            {/* Right fade */}
+            <div style={{
+              position: "absolute", right: 0, top: 0, bottom: 0, width: 40, zIndex: 2,
+              background: "linear-gradient(to left, var(--bg-page) 30%, transparent)",
+              pointerEvents: "none",
+            }} />
+
+            {/* Scrollable row */}
+            <div
+              ref={tabsRef}
+              className="sl-tabs-scroll"
+              style={{
+                display: "flex", gap: 6, overflowX: "auto",
+                padding: "14px 40px",
+                scrollbarWidth: "none",
+              }}
+            >
+              {categories.map((cat) => {
+                const isActive = cat.id === active;
+                return (
+                  <button
+                    key={cat.id}
+                    data-active={isActive ? "true" : "false"}
+                    onClick={() => setActive(cat.id)}
+                    style={{
+                      flexShrink: 0,
+                      padding: isActive ? "9px 22px" : "8px 18px",
+                      borderRadius: 8,
+                      border: "1px solid",
+                      borderColor: isActive ? "#E4002B" : "var(--border-card)",
+                      background: isActive
+                        ? "linear-gradient(135deg, #E4002B, #c0001f)"
+                        : "var(--bg-card)",
+                      color: isActive ? "#fff" : "var(--text-muted)",
+                      fontFamily: "var(--font-oswald)",
+                      fontWeight: 700,
+                      fontSize: "0.78rem",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.2s ease",
+                      boxShadow: isActive
+                        ? "0 4px 18px rgba(228,0,43,0.4)"
+                        : "0 1px 3px rgba(0,0,0,0.08)",
+                      outline: "none",
+                      position: "relative",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(228,0,43,0.4)";
+                        (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-card)";
+                        (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)";
+                      }
+                    }}
+                  >
+                    {cat.name}
+                    {isActive && (
+                      <span style={{
+                        position: "absolute", bottom: -1, left: "50%",
+                        transform: "translateX(-50%)",
+                        width: 24, height: 2,
+                        background: "#fff",
+                        borderRadius: 2,
+                        opacity: 0.6,
+                      }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* ── Category label ── */}
         <FadeIn key={active}>
           <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: "2rem" }}>{CAT_EMOJI[active] ?? "🍽️"}</span>
             <div>
               <h2 style={{
                 fontFamily: "var(--font-oswald)", fontWeight: 700, color: "var(--text-primary)",
@@ -191,7 +232,9 @@ function MenuContent() {
         {/* ── Grid ── */}
         {visible.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 20px", color: "var(--text-muted)" }}>
-            <div style={{ fontSize: 56, marginBottom: 16 }}>😔</div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ width: 56, height: 56, opacity: 0.3, marginBottom: 16 }}>
+              <circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
             <p>No items available in this category right now.</p>
           </div>
         ) : isDeals ? (

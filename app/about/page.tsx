@@ -11,11 +11,18 @@ const STATS = [
   { value: "Fast",     label: "Hot Delivery"       },
 ];
 
+const VALUE_ICONS = [
+  <svg key="fresh" viewBox="0 0 24 24" fill="none" stroke="#E4002B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 28, height: 28 }}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>,
+  <svg key="quality" viewBox="0 0 24 24" fill="none" stroke="#E4002B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 28, height: 28 }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  <svg key="love" viewBox="0 0 24 24" fill="none" stroke="#E4002B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 28, height: 28 }}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  <svg key="fast" viewBox="0 0 24 24" fill="none" stroke="#E4002B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 28, height: 28 }}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+];
+
 const VALUES = [
-  { icon: "🔥", title: "Made Fresh Daily",    desc: "Every pizza, burger, and side is prepared fresh — no frozen shortcuts." },
-  { icon: "🌿", title: "Quality Ingredients", desc: "We source the finest ingredients to ensure every bite is full of flavour." },
-  { icon: "❤️",  title: "Made with Love",      desc: "Our chefs put heart into every dish — that's the Shah-e-Lasani difference." },
-  { icon: "⚡", title: "Fast & Hot Delivery", desc: "Hot food, fast delivery. We respect your time and your taste buds." },
+  { title: "Made Fresh Daily",    desc: "Every pizza, burger, and side is prepared fresh — no frozen shortcuts." },
+  { title: "Quality Ingredients", desc: "We source the finest ingredients to ensure every bite is full of flavour." },
+  { title: "Made with Love",      desc: "Our chefs put heart into every dish — that's the Shah-e-Lasani difference." },
+  { title: "Fast & Hot Delivery", desc: "Hot food, fast delivery. We respect your time and your taste buds." },
 ];
 
 export default function AboutPage() {
@@ -118,7 +125,7 @@ export default function AboutPage() {
                 border: "1px solid rgba(228,0,43,0.15)",
                 borderRadius: 12,
               }}>
-                <span style={{ fontSize: "1.4rem" }}>📍</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#E4002B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 20, height: 20, flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div>
                   <div style={{ color: "var(--text-primary)", fontWeight: 600, fontSize: "0.88rem" }}>Our Location</div>
                   <div style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginTop: 2 }}>
@@ -226,7 +233,7 @@ export default function AboutPage() {
                     (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
                   }}
                 >
-                  <span style={{ fontSize: "1.8rem" }}>{v.icon}</span>
+                  <div style={{ marginBottom: 4 }}>{VALUE_ICONS[i]}</div>
                   <h3 style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.95rem", margin: "12px 0 8px" }}>
                     {v.title}
                   </h3>
