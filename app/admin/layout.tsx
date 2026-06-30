@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#fff" }}>
+    <div suppressHydrationWarning style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#fff" }}>
 
       {/* ── Sidebar ── */}
       <aside style={{

@@ -183,7 +183,7 @@ export default function DealOrderModal({
   onClose: () => void;
 }) {
   const { dispatch } = useCart();
-  const sections = DEAL_CONFIG[deal.id] ?? [];
+  const sections = deal.dealConfig ?? DEAL_CONFIG[deal.id] ?? [];
   const totalChoiceSteps = sections.length;
 
   const [step, setStep] = useState(0);

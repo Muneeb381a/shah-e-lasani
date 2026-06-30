@@ -39,6 +39,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
         is_deal:        body.is_deal ?? false,
         category_id:    body.category_id,
         image:          body.image ?? null,
+        deal_config:    body.deal_config ?? null,
       })
       .eq("id", id)
       .select()

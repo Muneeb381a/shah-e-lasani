@@ -21,6 +21,7 @@ export default function EditProductPage() {
           is_deal:        p.is_deal,
           category_id:    p.category_id,
           image:          p.image ?? null,
+          deal_config:    p.deal_config ?? null,
           sizes: p.product_sizes?.map((s: { label: string; price: number }) => ({
             label: s.label,
             price: s.price,

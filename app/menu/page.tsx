@@ -2,18 +2,55 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { products as staticProducts, categories as staticCategories } from "@/data/menu";
+import { products as staticProducts, categories as staticCategories, Product } from "@/data/menu";
+import type { ChoiceSection } from "@/lib/deal-config";
 import ProductCard from "@/components/ProductCard";
 import DealCard from "@/components/DealCard";
 import FadeIn from "@/components/FadeIn";
 
+type ApiItem = {
+  id: string; name: string; description: string; price: number;
+  originalPrice?: number; isDeal: boolean; categoryId: string;
+  image?: string; dealConfig?: ChoiceSection[];
+  sizes: { label: string; price: number }[];
+};
+type ApiCategory = { id: string; name: string; items: ApiItem[] };
 
 function MenuContent() {
   const searchParams = useSearchParams();
   const catParam = searchParams.get("cat");
 
+  const staticIds = new Set(staticProducts.map((p) => p.id));
+  const [extraDeals, setExtraDeals] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch("/api/menu")
+      .then((r) => r.json())
+      .then((data: ApiCategory[]) => {
+        const newDeals: Product[] = data
+          .flatMap((c) => c.items)
+          .filter((item) => item.isDeal && !staticIds.has(item.id))
+          .map((item) => ({
+            id:            item.id,
+            name:          item.name,
+            description:   item.description,
+            basePrice:     item.price,
+            originalPrice: item.originalPrice,
+            isAvailable:   true,
+            isDeal:        true,
+            categoryId:    item.categoryId,
+            sizes:         item.sizes,
+            image:         item.image,
+            dealConfig:    item.dealConfig,
+          }));
+        setExtraDeals(newDeals);
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const categories = staticCategories;
-  const products = staticProducts;
+  const products   = [...staticProducts, ...extraDeals];
 
   const getInitial = () => {
     const map: Record<string, string> = {

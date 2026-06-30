@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
         is_deal:        body.is_deal ?? false,
         category_id:    body.category_id,
         image:          body.image ?? null,
+        deal_config:    body.deal_config ?? null,
       })
       .select()
       .single();

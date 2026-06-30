@@ -19,7 +19,7 @@ export default function DealCard({ deal }: { deal: Product; index?: number }) {
   const savePct  = original ? Math.round(((original - deal.basePrice) / original) * 100) : null;
   const savings  = original ? original - deal.basePrice : null;
   const imgSrc   = deal.image || DEAL_DEFAULT_IMG;
-  const hasConfig = (DEAL_CONFIG[deal.id] ?? []).length > 0;
+  const hasConfig = ((deal.dealConfig ?? DEAL_CONFIG[deal.id]) ?? []).length > 0;
 
   return (
     <>

@@ -35,6 +35,7 @@ export async function GET() {
           isDeal:        p.is_deal,
           categoryId:    p.category_id,
           image:         p.image ?? undefined,
+          dealConfig:    p.deal_config ?? undefined,
           sizes: p.product_sizes?.map((s: { label: string; price: number }) => ({
             label: s.label,
             price: s.price,

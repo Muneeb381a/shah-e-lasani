@@ -1,3 +1,5 @@
+import type { ChoiceSection } from "@/lib/deal-config";
+
 export type ProductSize = {
   label: string;
   price: number;
@@ -14,6 +16,7 @@ export type Product = {
   categoryId: string;
   sizes?: ProductSize[];
   image?: string;
+  dealConfig?: ChoiceSection[];
 };
 
 function px(id: number) {

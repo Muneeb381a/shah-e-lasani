@@ -69,7 +69,6 @@ export const DEAL_CONFIG: Record<string, ChoiceSection[]> = {
   "deal-pd3": [
     pizza("pizza1", "Pizza 1 — Large",  LARGE_PIZZA,  GRP_LG),
     pizza("pizza2", "Pizza 2 — Large",  LARGE_PIZZA,  GRP_LG),
-    fries("Choose Large Fries"),
     drink(),
   ],
   "deal-pd4": [
@@ -87,15 +86,14 @@ export const DEAL_CONFIG: Record<string, ChoiceSection[]> = {
 
   // Burger / Combo Deals
   "deal-lasani": [
-    fries("Choose Your Fries"),
     wings("wings1", "Wings Flavor (5 pcs)"),
     drink(),
   ],
-  "deal-wow":    [fries("Choose Your Fries"), drink()],
-  "deal-bd01":   [fries("Choose Your Fries"), drink()],
-  "deal-bd02":   [fries("Choose Your Fries"), drink()],
-  "deal-bd03":   [fries("Choose Your Fries"), drink()],
-  "deal-bd04":   [fries("Choose Your Fries"), drink()],
+  "deal-wow":  [drink()],
+  "deal-bd01": [drink()],
+  "deal-bd02": [drink()],
+  "deal-bd03": [drink()],
+  "deal-bd04": [drink()],
 
   // Group Deals (drink only)
   "deal-friend":       [drink()],
