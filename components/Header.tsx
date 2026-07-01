@@ -89,7 +89,7 @@ function HeaderContent() {
         <span style={{ opacity: 0.5 }}>|</span>
         <span>0325-4695624</span>
         <span style={{ opacity: 0.5 }}>|</span>
-        <span>Open Daily 12pm – 12am</span>
+        <span>Open Daily 12 pm – 1 am</span>
       </div>
 
       <header style={{

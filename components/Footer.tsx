@@ -178,9 +178,9 @@ export default function Footer() {
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
-                { day: "Mon – Fri",  time: "12:00 PM – 11:00 PM" },
-                { day: "Saturday",   time: "12:00 PM – 12:00 AM" },
-                { day: "Sunday",     time: "1:00 PM – 11:00 PM"  },
+                { day: "Mon – Fri",  time: "12:00 PM – 1:00 AM" },
+                { day: "Saturday",   time: "12:00 PM – 1:00 AM" },
+                { day: "Sunday",     time: "1:00 PM – 1:00 AM"  },
               ].map((h) => (
                 <div key={h.day}>
                   <span style={{ color: "var(--text-muted)", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.12em" }}>
