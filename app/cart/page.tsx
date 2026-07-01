@@ -70,7 +70,7 @@ export default function CartPage() {
         customerPhone: form.customerPhone.trim(),
         orderType,
         address:       isPickup ? "PICKUP — Customer collecting" : form.address.trim(),
-        items:         state.items.map((i) => ({ name: i.name, size: i.size, quantity: i.quantity, price: i.price })),
+        items:         state.items.map((i) => ({ name: i.name, size: i.size, notes: i.notes, quantity: i.quantity, price: i.price })),
         totalAmount,
         paymentMethod: form.paymentMethod === "COD" ? "Cash on Delivery" : "Bank Transfer",
       };
@@ -80,7 +80,8 @@ export default function CartPage() {
       }).catch(() => {});
       const waUrl = buildWhatsAppUrl(orderData);
       dispatch({ type: "CLEAR_CART" });
-      router.push(`/order-success?wa=${encodeURIComponent(waUrl)}`);
+      const pm = form.paymentMethod === "BANK_TRANSFER" ? "bank" : "cod";
+      router.push(`/order-success?wa=${encodeURIComponent(waUrl)}&pm=${pm}&total=${totalAmount}`);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
