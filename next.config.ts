@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.gettyimages.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "thumbs.dreamstime.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {

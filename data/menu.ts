@@ -143,7 +143,8 @@ export const products: Product[] = [
 
   // ─── BEVERAGES ────────────────────────────────────────────────────────────
   { id: "drink-cold",  name: "Cold Drink (Own Choice)", description: "Pepsi, 7UP, Mirinda, Sting — your choice", basePrice: 60, isAvailable: true, isDeal: false, categoryId: "cat-beverages", image: px(15205136), sizes: [{label:"Regular Can",price:60},{label:"NR Bottle",price:100},{label:"1 Litre",price:180},{label:"1.5 Litre",price:230}] },
-  { id: "drink-water", name: "Mineral Water",           description: "Chilled mineral water",                    basePrice: 60, isAvailable: true, isDeal: false, categoryId: "cat-beverages", image: px(4113632),  sizes: [{label:"Small",price:60},{label:"Large",price:120}] },
+  { id: "drink-water", name: "Mineral Water",           description: "Chilled mineral water",                    basePrice: 60, isAvailable: true, isDeal: false, categoryId: "cat-beverages", image: "https://media.gettyimages.com/id/94665604/photo/bottles-of-aquafina-water-are-displayed-on-a-supermarket-she.jpg?s=1024x1024&w=gi&k=20&c=D7KEuN_Xw7t_eC-rrQmtbTAwUvocoD-g4eklRwyc1gI=",  sizes: [{label:"Small",price:60},{label:"Large",price:120}] },
+  { id: "drink-lassi", name: "Thandi Lassi",            description: "Chilled sweet lassi topped with crushed nuts & mint leaves", basePrice: 150, isAvailable: true, isDeal: false, categoryId: "cat-beverages", image: "https://thumbs.dreamstime.com/b/chilled-sweet-lassi-glasses-refreshing-served-elegant-glassware-topped-crushed-nuts-mint-leaves-415464156.jpg", sizes: [{label:"Regular",price:150},{label:"Large",price:250}] },
 
   // ─── COLD AND SWEET ───────────────────────────────────────────────────────
   { id: "cake-choc",       name: "Chocolate Cake",       description: "Rich moist chocolate layer cake — 1 pound",                         basePrice: 1000, isAvailable: true, isDeal: false, categoryId: "cat-cold", image: px(11774178) },
