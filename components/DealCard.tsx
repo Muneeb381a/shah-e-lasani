@@ -1,10 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Product } from "@/data/menu";
 import { DEAL_CONFIG } from "@/lib/deal-config";
 import DealOrderModal from "./DealOrderModal";
+
+// ── Composite deal image grid ──────────────────────────────────────────
+// Image is 4 cols × 3 rows. background-size: 400% 300%.
+// x positions: col1=0%, col2=33.33%, col3=66.67%, col4=100%
+// y positions: row1=0%,  row2=50%,   row3=100%
+const GRID_IMG = "/deals-grid.png";
+
+const GRID_POS: Record<string, string> = {
+  "deal-lasani":        "0% 0%",        // R1C1 — LASANI DEAL
+  "deal-wow":           "33.33% 0%",    // R1C2 — WOW DEAL
+  "deal-lazo-crispy":   "66.67% 0%",    // R1C3 — LAZO CRISPY
+  "deal-friend":        "100% 0%",      // R1C4 — FRIEND FASTIVAL
+  "deal-bd01":          "0% 50%",       // R2C1 — FRIEND FASTIVAL (1)
+  "deal-family":        "33.33% 50%",   // R2C2 — FAMILY FASTIVAL
+  "deal-crispy-cheese": "66.67% 50%",   // R2C3 — CRISPY & CHEESE
+  "deal-bake-cheese":   "100% 50%",     // R2C4 — BAKE & CHEESE
+  "deal-crunchy-bite":  "0% 100%",      // R3C1 — CRUNCHY BITE (paratha)
+  "deal-bd04":          "33.33% 100%",  // R3C2 — CRUNCHY BITE (pizza)
+  "deal-lazano":        "66.67% 100%",  // R3C3 — LAZANO DEAL
+  "deal-kids":          "100% 100%",    // R3C4 — Kids Deals
+};
 
 function px(id: number) {
   return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=480&h=320&dpr=1`;
@@ -12,14 +32,14 @@ function px(id: number) {
 const DEAL_DEFAULT_IMG = px(9872916);
 
 export default function DealCard({ deal }: { deal: Product; index?: number }) {
-  const [imgErr, setImgErr] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const original = deal.originalPrice;
-  const savePct  = original ? Math.round(((original - deal.basePrice) / original) * 100) : null;
-  const savings  = original ? original - deal.basePrice : null;
-  const imgSrc   = deal.image || DEAL_DEFAULT_IMG;
+  const original  = deal.originalPrice;
+  const savePct   = original ? Math.round(((original - deal.basePrice) / original) * 100) : null;
+  const savings   = original ? original - deal.basePrice : null;
   const hasConfig = ((deal.dealConfig ?? DEAL_CONFIG[deal.id]) ?? []).length > 0;
+
+  const gridPos = GRID_POS[deal.id];
 
   return (
     <>
@@ -43,24 +63,40 @@ export default function DealCard({ deal }: { deal: Product; index?: number }) {
         }}
       >
         {/* ── Image ── */}
-        <div style={{ position: "relative", height: 190, overflow: "hidden", background: "var(--bg-surface)", flexShrink: 0 }}>
-          {!imgErr ? (
-            <Image
-              src={imgSrc}
+        <div style={{
+          position: "relative", height: 190,
+          overflow: "hidden", background: "var(--bg-surface)", flexShrink: 0,
+        }}>
+          {gridPos ? (
+            /* Deal image from composite grid */
+            <div style={{
+              width: "100%", height: "100%",
+              backgroundImage: `url('${GRID_IMG}')`,
+              backgroundSize: "400% 300%",
+              backgroundPosition: gridPos,
+              backgroundRepeat: "no-repeat",
+              transition: "transform 0.4s ease",
+            }} />
+          ) : deal.image ? (
+            /* Custom uploaded image */
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={deal.image}
               alt={deal.name}
-              fill
-              sizes="(max-width: 600px) 100vw, 320px"
-              style={{ objectFit: "cover", transition: "transform 0.4s ease" }}
-              onError={() => setImgErr(true)}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.4s ease" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.06)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
             />
           ) : (
-            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" style={{ width: 52, height: 52, opacity: 0.25, color: "var(--text-muted)" }}>
-                <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><circle cx="12" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/>
-              </svg>
-            </div>
+            /* Pexels fallback */
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={DEAL_DEFAULT_IMG}
+              alt={deal.name}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.4s ease" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.06)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
+            />
           )}
 
           {/* Badges */}
