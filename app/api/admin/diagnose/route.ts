@@ -4,33 +4,49 @@ import { supabaseAdmin } from "@/lib/supabase";
 export async function GET() {
   const checks: Record<string, string> = {};
 
-  // 1. Env vars
-  checks.SUPABASE_URL      = process.env.NEXT_PUBLIC_SUPABASE_URL      ? "SET" : "MISSING";
-  checks.SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ? "SET" : "MISSING";
-  checks.SERVICE_ROLE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY     ? "SET" : "MISSING";
-  checks.ADMIN_PASSWORD    = process.env.ADMIN_PASSWORD                 ? "SET" : "MISSING";
+  checks.SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ? "SET" : "MISSING";
 
-  // 2. Supabase connection
-  let dbError = "ok";
-  try {
-    const db = supabaseAdmin();
-    const { error } = await db.from("orders").select("id").limit(1);
-    if (error) dbError = error.message;
-  } catch (e) {
-    dbError = e instanceof Error ? e.message : String(e);
-  }
-  checks.supabase_orders_table = dbError;
+  const db = supabaseAdmin();
 
-  // 3. order_items table
-  let itemsError = "ok";
-  try {
-    const db = supabaseAdmin();
-    const { error } = await db.from("order_items").select("id").limit(1);
-    if (error) itemsError = error.message;
-  } catch (e) {
-    itemsError = e instanceof Error ? e.message : String(e);
+  // Check orders columns via information_schema
+  const { data: cols, error: colErr } = await db
+    .from("information_schema.columns" as "orders")
+    .select("column_name, data_type")
+    .eq("table_name" as "id", "orders" as never)
+    .eq("table_schema" as "id", "public" as never);
+
+  if (colErr) {
+    checks.columns_check = colErr.message;
+  } else {
+    const names = (cols as unknown as { column_name: string }[]).map((c) => c.column_name);
+    checks.orders_columns = names.join(", ");
   }
-  checks.supabase_order_items_table = itemsError;
+
+  // Try a test INSERT then DELETE
+  const testPayload = {
+    customer_name:    "TEST_DIAGNOSE",
+    customer_phone:   "0000000000",
+    customer_address: "test",
+    order_type:       "delivery",
+    payment_method:   "COD",
+    notes:            "",
+    total_amount:     0,
+    status:           "pending",
+  };
+
+  const { data: inserted, error: insertErr } = await db
+    .from("orders")
+    .insert(testPayload)
+    .select()
+    .single();
+
+  if (insertErr) {
+    checks.test_insert = `FAILED: ${insertErr.message}`;
+  } else {
+    checks.test_insert = "OK";
+    // Clean up test row
+    await db.from("orders").delete().eq("id", inserted.id);
+  }
 
   return NextResponse.json(checks);
 }
