@@ -66,167 +66,150 @@ function isToday(iso: string) {
 
 // ── Print receipt ─────────────────────────────────────────────────────────────
 function printOrder(order: Order) {
-  const orderNum  = order.id.slice(-6).toUpperCase();
-  const isPickup  = order.order_type === "pickup";
-  const now       = new Date(order.created_at);
-  const dateStr   = now.toLocaleDateString("en-PK", { day: "2-digit", month: "short", year: "numeric" });
-  const timeStr   = now.toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit", hour12: true });
+  const orderNum = order.id.slice(-6).toUpperCase();
+  const isPickup = order.order_type === "pickup";
+  const now      = new Date(order.created_at);
+  const dateStr  = now.toLocaleDateString("en-PK", { day: "2-digit", month: "short", year: "numeric" });
+  const timeStr  = now.toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit", hour12: true });
 
   const itemRows = order.order_items.map((item) => {
-    const size      = item.selected_size ? ` (${item.selected_size})` : "";
-    const itemTotal = (item.unit_price * item.quantity).toLocaleString();
-    const noteLine  = item.notes ? `<tr><td colspan="4" style="padding:0 0 5px 10px;font-size:10px;color:#555;font-style:italic;">↳ ${item.notes}</td></tr>` : "";
+    const label     = item.selected_size ? `${item.product_name} (${item.selected_size})` : item.product_name;
+    const unitPrice = `Rs.${Number(item.unit_price).toLocaleString()}`;
+    const total     = `Rs.${(item.unit_price * item.quantity).toLocaleString()}`;
+    const noteRow   = item.notes
+      ? `<tr><td></td><td colspan="3" style="font-size:10px;color:#555;padding-bottom:5px;font-style:italic;">  ↳ ${item.notes}</td></tr>`
+      : "";
     return `
-      <tr>
-        <td style="padding:3px 0;vertical-align:top;">${item.quantity}</td>
-        <td style="padding:3px 4px;vertical-align:top;">${item.product_name}${size}</td>
-        <td style="padding:3px 4px;vertical-align:top;text-align:right;">Rs.${Number(item.unit_price).toLocaleString()}</td>
-        <td style="padding:3px 0;vertical-align:top;text-align:right;font-weight:bold;">Rs.${itemTotal}</td>
-      </tr>
-      ${noteLine}
-    `;
+      <tr style="border-bottom:1px dotted #ccc;">
+        <td style="padding:5px 6px 5px 0;text-align:center;font-weight:700;vertical-align:middle;width:22px;">${item.quantity}</td>
+        <td style="padding:5px 4px;vertical-align:middle;">${label}</td>
+        <td style="padding:5px 4px;text-align:right;vertical-align:middle;white-space:nowrap;width:60px;">${unitPrice}</td>
+        <td style="padding:5px 0 5px 4px;text-align:right;font-weight:700;vertical-align:middle;white-space:nowrap;width:65px;">${total}</td>
+      </tr>${noteRow}`;
   }).join("");
 
   const html = `<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Bill #${orderNum}</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 12px;
-      color: #000;
-      width: 80mm;
-      padding: 6px 8px 16px;
-      background: #fff;
-    }
-    .center  { text-align: center; }
-    .right   { text-align: right; }
-    .bold    { font-weight: bold; }
-    .small   { font-size: 10px; }
-    .dashed  { border: none; border-top: 1px dashed #000; margin: 7px 0; }
-    .solid   { border: none; border-top: 1px solid #000;  margin: 7px 0; }
-    .double  { border: none; border-top: 3px double #000; margin: 7px 0; }
-    table    { width: 100%; border-collapse: collapse; }
-    .shop-name {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      line-height: 1.1;
-    }
-    .shop-tagline {
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-    .order-badge {
-      display: inline-block;
-      border: 1.5px solid #000;
-      padding: 1px 8px;
-      font-size: 10px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .total-row td {
-      font-size: 15px;
-      font-weight: 900;
-      padding: 4px 0;
-    }
-    @media print {
-      @page { margin: 0; size: 80mm auto; }
-      body  { padding: 4px 8px 20px; }
-    }
-  </style>
+<meta charset="utf-8">
+<title>Bill #${orderNum}</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #111;
+    background: #fff;
+    width: 80mm;
+    max-width: 80mm;
+    padding: 10px 8px 20px;
+  }
+  .c  { text-align:center; }
+  .r  { text-align:right; }
+  .b  { font-weight:bold; }
+  .xs { font-size:10px; }
+  .sm { font-size:11px; }
+  hr.dash   { border:none; border-top:1px dashed #000; margin:8px 0; }
+  hr.solid  { border:none; border-top:1px solid  #000; margin:8px 0; }
+  hr.thick  { border:none; border-top:2px solid  #000; margin:8px 0; }
+  table { width:100%; border-collapse:collapse; }
+  td, th { line-height:1.4; }
+  @media print {
+    @page { size:80mm auto; margin:0; }
+    body  { padding:6px 8px 24px; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- ══ HEADER ══ -->
-  <div class="center" style="padding:6px 0 4px;">
-    <div class="shop-name">SHAH-E-LASANI</div>
-    <div class="shop-name" style="font-size:15px;letter-spacing:3px;">CAFE &amp; RESTAURANT</div>
-    <div class="dashed" style="margin:5px 0;"></div>
-    <div class="small">Chakrala Kulluwal Road, Sialkot</div>
-    <div class="small" style="margin-top:2px;">Ph: 0325-4695624 &nbsp;|&nbsp; 0300-XXXXXXX</div>
-    <div class="small" style="margin-top:2px;">www.shahelasanicafe.com</div>
-  </div>
+<!-- SHOP HEADER -->
+<div class="c" style="padding:4px 0 6px;">
+  <div style="font-size:7px;letter-spacing:5px;text-transform:uppercase;color:#555;margin-bottom:4px;">Welcome to</div>
+  <div style="font-size:22px;font-weight:900;letter-spacing:2px;line-height:1;">SHAH-E-LASANI</div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:4px;margin-top:1px;">CAFE &amp; RESTAURANT</div>
+  <hr class="dash" style="margin:6px 0;">
+  <div class="sm">Chakrala Kulluwal Road, Sialkot</div>
+  <div class="sm" style="margin-top:3px;font-weight:700;">0325-4695624</div>
+  <div class="xs" style="margin-top:2px;color:#444;">www.shahelasanicafe.com</div>
+</div>
 
-  <div class="double"></div>
+<hr class="thick">
 
-  <!-- ══ ORDER INFO ══ -->
-  <table>
-    <tr>
-      <td class="bold">BILL #${orderNum}</td>
-      <td class="right small">${dateStr}</td>
+<!-- ORDER META -->
+<table style="margin-bottom:2px;">
+  <tr>
+    <td class="b" style="font-size:13px;">Bill #${orderNum}</td>
+    <td class="r xs">${dateStr}</td>
+  </tr>
+  <tr>
+    <td>
+      <span style="border:1.5px solid #000;padding:1px 7px;font-size:10px;font-weight:700;letter-spacing:1px;">
+        ${isPickup ? "TAKEAWAY" : "DELIVERY"}
+      </span>
+    </td>
+    <td class="r xs">${timeStr}</td>
+  </tr>
+</table>
+
+<hr class="dash">
+
+<!-- CUSTOMER -->
+<table>
+  <tr>
+    <td class="xs b" style="width:46px;color:#444;padding:2px 0;">Name&nbsp;:</td>
+    <td class="sm b" style="padding:2px 0;">${order.customer_name || "—"}</td>
+  </tr>
+  <tr>
+    <td class="xs" style="color:#444;padding:2px 0;">Phone&nbsp;:</td>
+    <td class="sm" style="padding:2px 0;">${order.customer_phone || "—"}</td>
+  </tr>
+  ${!isPickup ? `<tr>
+    <td class="xs" style="color:#444;vertical-align:top;padding:2px 0;">Address:</td>
+    <td class="xs" style="padding:2px 0;">${order.address || "—"}</td>
+  </tr>` : ""}
+</table>
+
+<hr class="dash">
+
+<!-- ITEMS HEADER -->
+<table>
+  <thead>
+    <tr style="border-bottom:1px solid #000;">
+      <th style="width:22px;text-align:center;padding-bottom:4px;" class="xs">QTY</th>
+      <th style="text-align:left;padding-bottom:4px;" class="xs">ITEM</th>
+      <th style="text-align:right;padding-bottom:4px;width:60px;" class="xs">RATE</th>
+      <th style="text-align:right;padding-bottom:4px;width:65px;" class="xs">AMOUNT</th>
     </tr>
-    <tr>
-      <td><span class="order-badge">${isPickup ? "TAKEAWAY" : "DELIVERY"}</span></td>
-      <td class="right small">${timeStr}</td>
-    </tr>
-  </table>
+  </thead>
+  <tbody>
+    ${itemRows}
+  </tbody>
+</table>
 
-  <div class="dashed"></div>
+<hr class="solid">
 
-  <!-- ══ CUSTOMER ══ -->
-  <div class="small bold" style="letter-spacing:1px;margin-bottom:3px;">CUSTOMER DETAILS</div>
-  <table>
-    <tr>
-      <td class="small" style="width:40px;color:#444;">Name :</td>
-      <td class="small bold">${order.customer_name || "—"}</td>
-    </tr>
-    <tr>
-      <td class="small" style="color:#444;">Phone :</td>
-      <td class="small">${order.customer_phone || "—"}</td>
-    </tr>
-    ${!isPickup ? `<tr>
-      <td class="small" style="color:#444;vertical-align:top;">Addr &nbsp;:</td>
-      <td class="small">${order.address || "—"}</td>
-    </tr>` : ""}
-  </table>
+<!-- TOTAL -->
+<table>
+  <tr>
+    <td class="b" style="font-size:14px;padding:3px 0;">TOTAL</td>
+    <td class="r b" style="font-size:14px;padding:3px 0;">Rs. ${order.total_amount?.toLocaleString()}</td>
+  </tr>
+  <tr>
+    <td class="xs" style="color:#444;padding-top:2px;">Payment&nbsp;:</td>
+    <td class="r xs" style="padding-top:2px;">${order.payment_method || "—"}</td>
+  </tr>
+</table>
 
-  <div class="dashed"></div>
+${order.notes ? `<hr class="dash"><div class="xs" style="color:#444;"><span class="b">Note:</span> ${order.notes}</div>` : ""}
 
-  <!-- ══ ITEMS ══ -->
-  <table>
-    <thead>
-      <tr style="border-bottom:1px solid #000;">
-        <th style="width:16px;text-align:left;padding-bottom:3px;" class="small">QTY</th>
-        <th style="text-align:left;padding-bottom:3px;" class="small">ITEM</th>
-        <th style="text-align:right;padding-bottom:3px;" class="small">PRICE</th>
-        <th style="text-align:right;padding-bottom:3px;" class="small">AMOUNT</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${itemRows}
-    </tbody>
-  </table>
+<hr class="thick">
 
-  <div class="solid"></div>
-
-  <!-- ══ TOTAL ══ -->
-  <table>
-    <tr class="total-row">
-      <td>TOTAL AMOUNT</td>
-      <td style="text-align:right;">Rs. ${order.total_amount?.toLocaleString()}</td>
-    </tr>
-    <tr>
-      <td class="small" style="color:#444;padding-top:2px;">Payment :</td>
-      <td class="small right" style="padding-top:2px;">${order.payment_method || "—"}</td>
-    </tr>
-  </table>
-
-  ${order.notes ? `<div class="dashed"></div><div class="small" style="color:#555;"><span class="bold">Note:</span> ${order.notes}</div>` : ""}
-
-  <div class="double"></div>
-
-  <!-- ══ FOOTER ══ -->
-  <div class="center small" style="line-height:1.8;">
-    <div class="bold">*** THANK YOU FOR YOUR ORDER ***</div>
-    <div>Please visit us again!</div>
-    <div style="margin-top:4px;letter-spacing:1px;">~ Shah-e-Lasani Cafe ~</div>
-  </div>
+<!-- FOOTER -->
+<div class="c xs" style="line-height:2;margin-top:2px;">
+  <div class="b">*** THANK YOU FOR YOUR ORDER! ***</div>
+  <div>Aap ka shukriya — Please visit again</div>
+  <div style="margin-top:4px;font-size:9px;color:#555;letter-spacing:1px;">~ Shah-e-Lasani Cafe, Sialkot ~</div>
+</div>
 
 </body>
 </html>`;
@@ -235,7 +218,7 @@ function printOrder(order: Order) {
   if (!win) return;
   win.document.documentElement.innerHTML = html;
   win.focus();
-  setTimeout(() => { win.print(); }, 400);
+  setTimeout(() => { win.print(); }, 500);
 }
 
 // ── Status badge ──────────────────────────────────────────────────────────────
