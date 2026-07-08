@@ -94,7 +94,13 @@ export async function GET() {
       .order("created_at", { ascending: false })
       .limit(200);
 
-    if (error) throw error;
+    if (error) {
+      // Table doesn't exist yet → return empty list so admin page still loads
+      if (error.code === "42P01" || error.message?.includes("does not exist")) {
+        return NextResponse.json([]);
+      }
+      throw error;
+    }
     return NextResponse.json(orders ?? []);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

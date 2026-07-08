@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             position: "relative", flexShrink: 0, overflow: "hidden",
             boxShadow: "0 0 0 1px rgba(228,0,43,0.3)",
           }}>
-            <Image src="/shahelasani.png" alt="logo" fill sizes="40px" style={{ objectFit: "contain", padding: "4px" }} />
+            <Image src="/shahelasani.png" alt="logo" fill sizes="40px" priority style={{ objectFit: "contain", padding: "4px" }} />
           </div>
           <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#E4002B", letterSpacing: "0.04em" }}>
