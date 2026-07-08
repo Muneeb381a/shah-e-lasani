@@ -70,7 +70,7 @@ export default function CartPage() {
         customerPhone: form.customerPhone.trim(),
         orderType,
         address:       isPickup ? "PICKUP — Customer collecting" : form.address.trim(),
-        items:         state.items.map((i) => ({ name: i.name, size: i.size, notes: i.notes, quantity: i.quantity, price: i.price })),
+        items:         state.items.map((i) => ({ productId: i.productId, name: i.name, size: i.size, notes: i.notes, quantity: i.quantity, price: i.price })),
         totalAmount,
         paymentMethod: form.paymentMethod === "COD" ? "Cash on Delivery" : "Bank Transfer",
       };
