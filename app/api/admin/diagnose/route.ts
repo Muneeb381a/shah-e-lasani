@@ -2,51 +2,50 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
-  const checks: Record<string, string> = {};
-
-  checks.SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ? "SET" : "MISSING";
-
   const db = supabaseAdmin();
+  const out: Record<string, string> = {};
 
-  // Check orders columns via information_schema
-  const { data: cols, error: colErr } = await db
-    .from("information_schema.columns" as "orders")
-    .select("column_name, data_type")
-    .eq("table_name" as "id", "orders" as never)
-    .eq("table_schema" as "id", "public" as never);
-
-  if (colErr) {
-    checks.columns_check = colErr.message;
-  } else {
-    const names = (cols as unknown as { column_name: string }[]).map((c) => c.column_name);
-    checks.orders_columns = names.join(", ");
-  }
-
-  // Try a test INSERT then DELETE
-  const testPayload = {
-    customer_name:  "TEST_DIAGNOSE",
-    customer_phone: "0000000000",
-    address:        "test",
-    order_type:     "delivery",
-    payment_method: "COD",
-    notes:          "",
-    total_amount:   0,
-    status:         "pending",
-  };
-
-  const { data: inserted, error: insertErr } = await db
+  // 1. Insert a test order
+  const { data: order, error: orderErr } = await db
     .from("orders")
-    .insert(testPayload)
+    .insert({
+      customer_name:  "TEST_DIAGNOSE",
+      customer_phone: "0000000000",
+      address:        "test",
+      order_type:     "delivery",
+      payment_method: "COD",
+      notes:          "",
+      total_amount:   0,
+      status:         "pending",
+    })
     .select()
     .single();
 
-  if (insertErr) {
-    checks.test_insert = `FAILED: ${insertErr.message}`;
+  if (orderErr) {
+    out.orders_insert = `FAILED: ${orderErr.message}`;
+    return NextResponse.json(out);
+  }
+  out.orders_insert = "OK";
+
+  // 2. Insert a test order_item using every column we send
+  const { error: itemErr } = await db.from("order_items").insert({
+    order_id:      order.id,
+    product_id:    "test-product",
+    product_name:  "Test Item",
+    quantity:      1,
+    unit_price:    100,
+    selected_size: "Regular",
+    notes:         "test note",
+  });
+
+  if (itemErr) {
+    out.order_items_insert = `FAILED: ${itemErr.message}`;
   } else {
-    checks.test_insert = "OK";
-    // Clean up test row
-    await db.from("orders").delete().eq("id", inserted.id);
+    out.order_items_insert = "OK";
   }
 
-  return NextResponse.json(checks);
+  // 3. Clean up
+  await db.from("orders").delete().eq("id", order.id);
+
+  return NextResponse.json(out);
 }
