@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { supabase } from "@/lib/supabase";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type OrderItem = {
@@ -445,7 +446,29 @@ export default function AdminOrdersPage() {
   const [search,       setSearch]       = useState("");
   const [selectedId,   setSelectedId]   = useState<string | null>(null);
   const [lastRefresh,  setLastRefresh]  = useState(new Date());
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [newOrderAlert, setNewOrderAlert] = useState<string | null>(null); // customer name
+  const intervalRef    = useRef<ReturnType<typeof setInterval> | null>(null);
+  const orderIdsRef    = useRef<Set<string>>(new Set());
+
+  function playBeep() {
+    try {
+      const ctx  = new AudioContext();
+      const gain = ctx.createGain();
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+
+      // Two-tone ding
+      [0, 0.18].forEach((offset, i) => {
+        const osc = ctx.createOscillator();
+        osc.connect(gain);
+        osc.frequency.value = i === 0 ? 880 : 1100;
+        gain.gain.setValueAtTime(0.35, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.35);
+        osc.start(ctx.currentTime + offset);
+        osc.stop(ctx.currentTime + offset + 0.35);
+      });
+    } catch {}
+  }
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -454,7 +477,9 @@ export default function AdminOrdersPage() {
       if (!res.ok) {
         throw new Error(data?.error ?? `HTTP ${res.status}`);
       }
-      setOrders(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
+      orderIdsRef.current = new Set(list.map((o: Order) => o.id));
+      setOrders(list);
       setLastRefresh(new Date());
       setError("");
     } catch (err) {
@@ -468,8 +493,41 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     fetchOrders();
     intervalRef.current = setInterval(fetchOrders, 30000);
+
+    // Supabase Realtime — listen for new orders
+    const channel = supabase
+      .channel("admin-orders")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "orders" },
+        async (payload) => {
+          const newId = (payload.new as Order).id;
+          if (orderIdsRef.current.has(newId)) return;
+
+          // Fetch full order with items
+          const res  = await fetch(`/api/orders/${newId}`);
+          const full = res.ok ? await res.json() : payload.new;
+
+          setOrders((prev) => {
+            if (prev.find((o) => o.id === newId)) return prev;
+            orderIdsRef.current.add(newId);
+            return [full, ...prev];
+          });
+
+          setNewOrderAlert((full as Order).customer_name ?? "Customer");
+          setLastRefresh(new Date());
+          playBeep();
+
+          // Change tab title
+          document.title = "🔔 New Order! — Admin";
+          setTimeout(() => { document.title = "Orders — Admin"; }, 8000);
+        },
+      )
+      .subscribe();
+
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      supabase.removeChannel(channel);
     };
   }, [fetchOrders]);
 
@@ -522,6 +580,56 @@ export default function AdminOrdersPage() {
           ↻ Refresh
         </button>
       </div>
+
+      {/* ── New order alert banner ── */}
+      {newOrderAlert && (
+        <div
+          onClick={() => setNewOrderAlert(null)}
+          style={{
+            marginBottom: 20,
+            background: "linear-gradient(135deg,rgba(228,0,43,0.18),rgba(228,0,43,0.08))",
+            border: "1px solid rgba(228,0,43,0.4)",
+            borderRadius: 12, padding: "14px 18px",
+            display: "flex", alignItems: "center", gap: 12,
+            cursor: "pointer",
+            animation: "pulse 1.5s ease-in-out 3",
+          }}
+        >
+          <div style={{
+            width: 10, height: 10, borderRadius: "50%",
+            background: "#E4002B",
+            boxShadow: "0 0 0 4px rgba(228,0,43,0.25)",
+            animation: "ping 1s ease-in-out infinite",
+            flexShrink: 0,
+          }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ color: "#fff", fontWeight: 800, fontSize: 14 }}>
+              🔔 Naya Order Aaya!
+            </div>
+            <div style={{ color: "#ff8fa3", fontSize: 12, marginTop: 2 }}>
+              {newOrderAlert} ka order abhi place hua — list mein sabse upar hai
+            </div>
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); setNewOrderAlert(null); }}
+            style={{
+              background: "none", border: "none", color: "#666",
+              cursor: "pointer", fontSize: 18, lineHeight: 1, padding: 4,
+            }}
+          >×</button>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes ping {
+          0%, 100% { box-shadow: 0 0 0 4px rgba(228,0,43,0.25); }
+          50%       { box-shadow: 0 0 0 8px rgba(228,0,43,0.1);  }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.85; }
+        }
+      `}</style>
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 24 }}>
