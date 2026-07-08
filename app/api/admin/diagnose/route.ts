@@ -24,14 +24,14 @@ export async function GET() {
 
   // Try a test INSERT then DELETE
   const testPayload = {
-    customer_name:    "TEST_DIAGNOSE",
-    customer_phone:   "0000000000",
-    customer_address: "test",
-    order_type:       "delivery",
-    payment_method:   "COD",
-    notes:            "",
-    total_amount:     0,
-    status:           "pending",
+    customer_name:  "TEST_DIAGNOSE",
+    customer_phone: "0000000000",
+    address:        "test",
+    order_type:     "delivery",
+    payment_method: "COD",
+    notes:          "",
+    total_amount:   0,
+    status:         "pending",
   };
 
   const { data: inserted, error: insertErr } = await db

@@ -1,51 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 
-// POST /api/orders — place a new order (resilient to old DB schema)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const db   = supabaseAdmin();
 
-    // ── Try inserting with full schema first ──────────────────
-    let orderResult = await db
+    const { data: order, error: orderErr } = await db
       .from("orders")
       .insert({
-        customer_name:    body.customerName,
-        customer_phone:   body.customerPhone,
-        customer_address: body.address ?? "",
-        order_type:       body.orderType ?? "delivery",
-        payment_method:   body.paymentMethod,
-        notes:            body.notes ?? "",
-        total_amount:     body.totalAmount,
-        status:           "pending",
+        customer_name:  body.customerName,
+        customer_phone: body.customerPhone,
+        address:        body.address ?? "",
+        order_type:     body.orderType ?? "delivery",
+        payment_method: body.paymentMethod,
+        notes:          body.notes ?? "",
+        total_amount:   body.totalAmount,
+        status:         "pending",
       })
       .select()
       .single();
 
-    // ── Fallback: old schema without order_type ───────────────
-    if (orderResult.error) {
-      console.warn("Full insert failed, trying without order_type:", orderResult.error.message);
-      orderResult = await db
-        .from("orders")
-        .insert({
-          customer_name:    body.customerName,
-          customer_phone:   body.customerPhone,
-          customer_address: body.address ?? "",
-          payment_method:   body.paymentMethod,
-          notes:            body.notes ?? "",
-          total_amount:     body.totalAmount,
-          status:           "pending",
-        })
-        .select()
-        .single();
-    }
+    if (orderErr) throw orderErr;
 
-    if (orderResult.error) throw orderResult.error;
-    const order = orderResult.data;
-
-    // ── Insert order items ────────────────────────────────────
-    if (body.items && body.items.length > 0) {
+    if (body.items?.length > 0) {
       const rows = body.items.map((item: {
         productId?: string;
         name:       string;
@@ -63,16 +41,8 @@ export async function POST(req: NextRequest) {
         notes:         item.notes ?? null,
       }));
 
-      let itemResult = await db.from("order_items").insert(rows);
-
-      // Fallback: old schema without notes column
-      if (itemResult.error) {
-        console.warn("Items insert failed, trying without notes:", itemResult.error.message);
-        const rowsNoNotes = rows.map(({ notes: _n, ...rest }: { notes?: string | null; [key: string]: unknown }) => rest);
-        itemResult = await db.from("order_items").insert(rowsNoNotes);
-      }
-
-      if (itemResult.error) throw itemResult.error;
+      const { error: itemsErr } = await db.from("order_items").insert(rows);
+      if (itemsErr) throw itemsErr;
     }
 
     return NextResponse.json({ success: true, orderId: order.id });
@@ -83,11 +53,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/orders — admin: list all orders newest first
 export async function GET() {
   try {
     const db = supabaseAdmin();
-
     const { data: orders, error } = await db
       .from("orders")
       .select("*, order_items(*)")
@@ -95,7 +63,6 @@ export async function GET() {
       .limit(200);
 
     if (error) {
-      // Table doesn't exist yet → return empty list so admin page still loads
       if (error.code === "42P01" || error.message?.includes("does not exist")) {
         return NextResponse.json([]);
       }

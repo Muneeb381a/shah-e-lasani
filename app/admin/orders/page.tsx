@@ -13,17 +13,17 @@ type OrderItem = {
 };
 
 type Order = {
-  id:               string;
-  customer_name:    string;
-  customer_phone:   string;
-  customer_address: string;
-  order_type:       string;
-  payment_method:   string;
-  notes:            string;
-  total_amount:     number;
-  status:           string;
-  created_at:       string;
-  order_items:      OrderItem[];
+  id:             string;
+  customer_name:  string;
+  customer_phone: string;
+  address:        string;
+  order_type:     string;
+  payment_method: string;
+  notes:          string;
+  total_amount:   number;
+  status:         string;
+  created_at:     string;
+  order_items:    OrderItem[];
 };
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ function printOrder(order: Order) {
       <div class="label">Customer</div>
       <div class="value">${order.customer_name || "—"}</div>
       <div style="font-size:12px;">${order.customer_phone || "—"}</div>
-      ${order.order_type !== "pickup" ? `<div style="font-size:12px;margin-top:2px;">${order.customer_address || "—"}</div>` : ""}
+      ${order.order_type !== "pickup" ? `<div style="font-size:12px;margin-top:2px;">${order.address || "—"}</div>` : ""}
       <div class="divider"></div>
       <div class="label">Items</div>
       ${items}
@@ -278,10 +278,10 @@ function OrderDetailModal({ order, onClose, onStatusChange }: {
                 <div style={{ fontSize: 13, color: "#ddd", fontWeight: 600 }}>{value}</div>
               </div>
             ))}
-            {!isPickup && order.customer_address && (
+            {!isPickup && order.address && (
               <div style={{ gridColumn: "1 / -1" }}>
                 <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3 }}>Delivery Address</div>
-                <div style={{ fontSize: 13, color: "#ddd" }}>{order.customer_address}</div>
+                <div style={{ fontSize: 13, color: "#ddd" }}>{order.address}</div>
               </div>
             )}
           </div>
