@@ -74,10 +74,17 @@ export default function CartPage() {
         totalAmount,
         paymentMethod: form.paymentMethod === "COD" ? "Cash on Delivery" : "Bank Transfer",
       };
-      await fetch("/api/orders", {
+      const res  = await fetch("/api/orders", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
-      }).catch(() => {});
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        const msg = json.message ?? "Order save failed. Please try again.";
+        setError(msg);
+        setLoading(false);
+        return;
+      }
       const waUrl = buildWhatsAppUrl(orderData);
       dispatch({ type: "CLEAR_CART" });
       const pm = form.paymentMethod === "BANK_TRANSFER" ? "bank" : "cod";

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 
-// POST /api/orders — place a new order
+// POST /api/orders — place a new order (resilient to old DB schema)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const db   = supabaseAdmin();
 
-    const { data: order, error: orderErr } = await db
+    // ── Try inserting with full schema first ──────────────────
+    let orderResult = await db
       .from("orders")
       .insert({
         customer_name:    body.customerName,
@@ -22,8 +23,28 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (orderErr) throw orderErr;
+    // ── Fallback: old schema without order_type ───────────────
+    if (orderResult.error) {
+      console.warn("Full insert failed, trying without order_type:", orderResult.error.message);
+      orderResult = await db
+        .from("orders")
+        .insert({
+          customer_name:    body.customerName,
+          customer_phone:   body.customerPhone,
+          customer_address: body.address ?? "",
+          payment_method:   body.paymentMethod,
+          notes:            body.notes ?? "",
+          total_amount:     body.totalAmount,
+          status:           "pending",
+        })
+        .select()
+        .single();
+    }
 
+    if (orderResult.error) throw orderResult.error;
+    const order = orderResult.data;
+
+    // ── Insert order items ────────────────────────────────────
     if (body.items && body.items.length > 0) {
       const rows = body.items.map((item: {
         productId?: string;
@@ -41,14 +62,24 @@ export async function POST(req: NextRequest) {
         selected_size: item.size ?? null,
         notes:         item.notes ?? null,
       }));
-      const { error: itemErr } = await db.from("order_items").insert(rows);
-      if (itemErr) throw itemErr;
+
+      let itemResult = await db.from("order_items").insert(rows);
+
+      // Fallback: old schema without notes column
+      if (itemResult.error) {
+        console.warn("Items insert failed, trying without notes:", itemResult.error.message);
+        const rowsNoNotes = rows.map(({ notes: _n, ...rest }: { notes?: string | null; [key: string]: unknown }) => rest);
+        itemResult = await db.from("order_items").insert(rowsNoNotes);
+      }
+
+      if (itemResult.error) throw itemResult.error;
     }
 
     return NextResponse.json({ success: true, orderId: order.id });
   } catch (err) {
-    console.error("Order save error:", err);
-    return NextResponse.json({ success: false, message: "Failed to save order" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Order save error:", msg);
+    return NextResponse.json({ success: false, message: msg }, { status: 500 });
   }
 }
 
@@ -66,7 +97,8 @@ export async function GET() {
     if (error) throw error;
     return NextResponse.json(orders ?? []);
   } catch (err) {
-    console.error("Orders fetch error:", err);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Orders fetch error:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -368,14 +368,17 @@ export default function AdminOrdersPage() {
 
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await fetch("/api/orders");
-      if (!res.ok) throw new Error("Failed to fetch");
+      const res  = await fetch("/api/orders");
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error ?? `HTTP ${res.status}`);
+      }
       setOrders(Array.isArray(data) ? data : []);
       setLastRefresh(new Date());
       setError("");
-    } catch {
-      setError("Could not load orders. Make sure Supabase orders table exists.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Could not load orders: ${msg}`);
     } finally {
       setLoading(false);
     }
