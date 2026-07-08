@@ -66,76 +66,174 @@ function isToday(iso: string) {
 
 // ── Print receipt ─────────────────────────────────────────────────────────────
 function printOrder(order: Order) {
-  const items = order.order_items.map((item) => {
-    const size  = item.selected_size ? ` (${item.selected_size})` : "";
-    const notes = item.notes ? `\n    Note: ${item.notes}` : "";
-    const line  = `${item.quantity}x ${item.product_name}${size} — Rs. ${(item.unit_price * item.quantity).toLocaleString()}${notes}`;
-    return `<div style="margin-bottom:6px;font-size:13px;">${line.replace(/\n/g, "<br>")}</div>`;
+  const orderNum  = order.id.slice(-6).toUpperCase();
+  const isPickup  = order.order_type === "pickup";
+  const now       = new Date(order.created_at);
+  const dateStr   = now.toLocaleDateString("en-PK", { day: "2-digit", month: "short", year: "numeric" });
+  const timeStr   = now.toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit", hour12: true });
+
+  const itemRows = order.order_items.map((item) => {
+    const size      = item.selected_size ? ` (${item.selected_size})` : "";
+    const itemTotal = (item.unit_price * item.quantity).toLocaleString();
+    const noteLine  = item.notes ? `<tr><td colspan="4" style="padding:0 0 5px 10px;font-size:10px;color:#555;font-style:italic;">↳ ${item.notes}</td></tr>` : "";
+    return `
+      <tr>
+        <td style="padding:3px 0;vertical-align:top;">${item.quantity}</td>
+        <td style="padding:3px 4px;vertical-align:top;">${item.product_name}${size}</td>
+        <td style="padding:3px 4px;vertical-align:top;text-align:right;">Rs.${Number(item.unit_price).toLocaleString()}</td>
+        <td style="padding:3px 0;vertical-align:top;text-align:right;font-weight:bold;">Rs.${itemTotal}</td>
+      </tr>
+      ${noteLine}
+    `;
   }).join("");
 
-  const orderTypeIcon = order.order_type === "pickup" ? "🏃 PICKUP" : "🚚 DELIVERY";
-  const orderNum = order.id.slice(-6).toUpperCase();
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bill #${orderNum}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      color: #000;
+      width: 80mm;
+      padding: 6px 8px 16px;
+      background: #fff;
+    }
+    .center  { text-align: center; }
+    .right   { text-align: right; }
+    .bold    { font-weight: bold; }
+    .small   { font-size: 10px; }
+    .dashed  { border: none; border-top: 1px dashed #000; margin: 7px 0; }
+    .solid   { border: none; border-top: 1px solid #000;  margin: 7px 0; }
+    .double  { border: none; border-top: 3px double #000; margin: 7px 0; }
+    table    { width: 100%; border-collapse: collapse; }
+    .shop-name {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+    .shop-tagline {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .order-badge {
+      display: inline-block;
+      border: 1.5px solid #000;
+      padding: 1px 8px;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .total-row td {
+      font-size: 15px;
+      font-weight: 900;
+      padding: 4px 0;
+    }
+    @media print {
+      @page { margin: 0; size: 80mm auto; }
+      body  { padding: 4px 8px 20px; }
+    }
+  </style>
+</head>
+<body>
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>Order #${orderNum}</title>
-      <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Courier New', monospace; width: 80mm; padding: 10px; color: #000; }
-        .center { text-align: center; }
-        .bold { font-weight: bold; }
-        .divider { border-top: 1px dashed #000; margin: 8px 0; }
-        .header { font-size: 18px; font-weight: bold; margin-bottom: 2px; }
-        .sub { font-size: 11px; color: #444; }
-        .label { font-size: 10px; text-transform: uppercase; color: #555; margin-top: 8px; margin-bottom: 2px; }
-        .value { font-size: 13px; font-weight: bold; }
-        .status { display: inline-block; border: 1px solid #000; padding: 2px 10px; font-size: 11px; font-weight: bold; border-radius: 4px; }
-        .total { font-size: 16px; font-weight: bold; }
-        .footer { font-size: 10px; color: #555; margin-top: 8px; }
-        @media print {
-          @page { margin: 0; size: 80mm auto; }
-          body { padding: 8px; }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="center">
-        <div class="header">SHAH-E-LASANI CAFE</div>
-        <div class="sub">WhatsApp: 0325-4695624</div>
-        <div class="sub">Chakrala Kulluwal Road, Sialkot</div>
-      </div>
-      <div class="divider"></div>
-      <div class="bold" style="font-size:13px;">Order #${orderNum}</div>
-      <div class="sub">${formatTime(order.created_at)}</div>
-      <div style="margin-top:4px;"><span class="status">${orderTypeIcon}</span></div>
-      <div class="divider"></div>
-      <div class="label">Customer</div>
-      <div class="value">${order.customer_name || "—"}</div>
-      <div style="font-size:12px;">${order.customer_phone || "—"}</div>
-      ${order.order_type !== "pickup" ? `<div style="font-size:12px;margin-top:2px;">${order.address || "—"}</div>` : ""}
-      <div class="divider"></div>
-      <div class="label">Items</div>
-      ${items}
-      <div class="divider"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span class="label" style="margin:0;">TOTAL</span>
-        <span class="total">Rs. ${order.total_amount?.toLocaleString()}</span>
-      </div>
-      <div style="margin-top:4px;font-size:12px;">Payment: ${order.payment_method}</div>
-      ${order.notes ? `<div style="margin-top:4px;font-size:11px;color:#555;">Note: ${order.notes}</div>` : ""}
-      <div class="divider"></div>
-      <div class="center footer">Thank you for your order!<br>Please visit again 🍕</div>
-    </body>
-    </html>
-  `;
+  <!-- ══ HEADER ══ -->
+  <div class="center" style="padding:6px 0 4px;">
+    <div class="shop-name">SHAH-E-LASANI</div>
+    <div class="shop-name" style="font-size:15px;letter-spacing:3px;">CAFE &amp; RESTAURANT</div>
+    <div class="dashed" style="margin:5px 0;"></div>
+    <div class="small">Chakrala Kulluwal Road, Sialkot</div>
+    <div class="small" style="margin-top:2px;">Ph: 0325-4695624 &nbsp;|&nbsp; 0300-XXXXXXX</div>
+    <div class="small" style="margin-top:2px;">www.shahelasanicafe.com</div>
+  </div>
 
-  const win = window.open("", "_blank", "width=400,height=600");
+  <div class="double"></div>
+
+  <!-- ══ ORDER INFO ══ -->
+  <table>
+    <tr>
+      <td class="bold">BILL #${orderNum}</td>
+      <td class="right small">${dateStr}</td>
+    </tr>
+    <tr>
+      <td><span class="order-badge">${isPickup ? "TAKEAWAY" : "DELIVERY"}</span></td>
+      <td class="right small">${timeStr}</td>
+    </tr>
+  </table>
+
+  <div class="dashed"></div>
+
+  <!-- ══ CUSTOMER ══ -->
+  <div class="small bold" style="letter-spacing:1px;margin-bottom:3px;">CUSTOMER DETAILS</div>
+  <table>
+    <tr>
+      <td class="small" style="width:40px;color:#444;">Name :</td>
+      <td class="small bold">${order.customer_name || "—"}</td>
+    </tr>
+    <tr>
+      <td class="small" style="color:#444;">Phone :</td>
+      <td class="small">${order.customer_phone || "—"}</td>
+    </tr>
+    ${!isPickup ? `<tr>
+      <td class="small" style="color:#444;vertical-align:top;">Addr &nbsp;:</td>
+      <td class="small">${order.address || "—"}</td>
+    </tr>` : ""}
+  </table>
+
+  <div class="dashed"></div>
+
+  <!-- ══ ITEMS ══ -->
+  <table>
+    <thead>
+      <tr style="border-bottom:1px solid #000;">
+        <th style="width:16px;text-align:left;padding-bottom:3px;" class="small">QTY</th>
+        <th style="text-align:left;padding-bottom:3px;" class="small">ITEM</th>
+        <th style="text-align:right;padding-bottom:3px;" class="small">PRICE</th>
+        <th style="text-align:right;padding-bottom:3px;" class="small">AMOUNT</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${itemRows}
+    </tbody>
+  </table>
+
+  <div class="solid"></div>
+
+  <!-- ══ TOTAL ══ -->
+  <table>
+    <tr class="total-row">
+      <td>TOTAL AMOUNT</td>
+      <td style="text-align:right;">Rs. ${order.total_amount?.toLocaleString()}</td>
+    </tr>
+    <tr>
+      <td class="small" style="color:#444;padding-top:2px;">Payment :</td>
+      <td class="small right" style="padding-top:2px;">${order.payment_method || "—"}</td>
+    </tr>
+  </table>
+
+  ${order.notes ? `<div class="dashed"></div><div class="small" style="color:#555;"><span class="bold">Note:</span> ${order.notes}</div>` : ""}
+
+  <div class="double"></div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="center small" style="line-height:1.8;">
+    <div class="bold">*** THANK YOU FOR YOUR ORDER ***</div>
+    <div>Please visit us again!</div>
+    <div style="margin-top:4px;letter-spacing:1px;">~ Shah-e-Lasani Cafe ~</div>
+  </div>
+
+</body>
+</html>`;
+
+  const win = window.open("", "_blank", "width=420,height=700");
   if (!win) return;
-  win.document.write(html);
-  win.document.close();
+  win.document.documentElement.innerHTML = html;
   win.focus();
   setTimeout(() => { win.print(); }, 400);
 }
@@ -536,7 +634,6 @@ export default function AdminOrdersPage() {
       {!loading && visible.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {visible.map((order) => {
-            const cfg      = STATUS_CONFIG[order.status] ?? STATUS_CONFIG.pending;
             const orderNum = order.id.slice(-6).toUpperCase();
             const isPickup = order.order_type === "pickup";
             const itemSummary = (order.order_items ?? [])
