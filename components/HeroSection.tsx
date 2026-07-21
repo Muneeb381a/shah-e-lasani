@@ -107,13 +107,16 @@ export default function HeroSection() {
         <p style={{
           color: "#444444",
           fontSize: "clamp(0.92rem, 2vw, 1.05rem)",
-          lineHeight: 1.75, margin: "0 auto 40px", maxWidth: 480,
+          lineHeight: 1.9, margin: "0 auto 40px", maxWidth: 520,
+          fontStyle: "italic",
         }}>
-          Pizza · Burgers · Wings · Deals — crafted fresh every order.
-          <br />
-          <span style={{ color: "#c9001f", fontWeight: 600 }}>
-            Sialkot's finest, delivered hot to your door.
-          </span>
+          &ldquo;Eat good{" "}
+          <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+          {" "}that&apos;s way{" "}
+          <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+          {" "}Serves good and{" "}
+          <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+          &rdquo;
         </p>
 
         {/* CTA Buttons */}

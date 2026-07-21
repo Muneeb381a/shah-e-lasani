@@ -61,8 +61,14 @@ export default function AboutPage() {
             <span style={{ color: "var(--text-primary)" }}>Cafe</span>
           </h1>
           <div style={{ width: 60, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, margin: "0 auto 20px" }} />
-          <p style={{ color: "var(--text-secondary)", fontSize: "1rem", maxWidth: 540, margin: "0 auto", lineHeight: 1.7 }}>
-            Eat good Feel good that's why Shah-e-Lasani Cafe Serves good and hygienic food. A family-run cafe built on passion, quality, and the love of great food.
+          <p style={{ color: "var(--text-secondary)", fontSize: "1rem", maxWidth: 540, margin: "0 auto", lineHeight: 1.7, fontStyle: "italic" }}>
+            &ldquo;Eat good{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+            {" "}that&apos;s way{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+            {" "}Serves good and{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+            &rdquo;
           </p>
         </FadeIn>
       </div>

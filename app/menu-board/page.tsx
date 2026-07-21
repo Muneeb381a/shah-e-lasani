@@ -58,9 +58,15 @@ export default function MenuBoardPage() {
           }}>
             Menu Boards
           </h1>
-          <div style={{ width: 60, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, margin: "0 auto 16px" }} />
-          <p style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
-            Tap any board to zoom in — pinch to zoom on mobile
+          <div style={{ width: 60, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, margin: "0 auto 14px" }} />
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontStyle: "italic", marginBottom: 8 }}>
+            &ldquo;Eat good{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+            {" "}that&apos;s way{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+            {" "}Serves good and{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+            &rdquo;
           </p>
         </FadeIn>
       </div>

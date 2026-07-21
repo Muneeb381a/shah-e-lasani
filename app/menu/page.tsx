@@ -145,8 +145,14 @@ function MenuContent() {
             background: "linear-gradient(90deg, #E4002B, #F5A623)",
             borderRadius: 2, margin: "0 auto 14px",
           }} />
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", transition: "color 0.3s ease" }}>
-            Fresh made-to-order — pizza, burgers, sides &amp; drinks
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", transition: "color 0.3s ease", fontStyle: "italic", marginBottom: 6 }}>
+            &ldquo;Eat good{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+            {" "}that&apos;s way{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+            {" "}Serves good and{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+            &rdquo;
           </p>
         </div>
       </div>

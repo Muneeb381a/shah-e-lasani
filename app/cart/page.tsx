@@ -137,7 +137,16 @@ export default function CartPage() {
             fontSize: "clamp(2rem, 5vw, 3rem)", textTransform: "uppercase",
             letterSpacing: "0.04em", lineHeight: 1,
           }}>Checkout</h1>
-          <div style={{ width: 50, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, marginTop: 12 }} />
+          <div style={{ width: 50, height: 3, background: "linear-gradient(90deg,#E4002B,#F5A623)", borderRadius: 2, marginTop: 12, marginBottom: 12 }} />
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontStyle: "italic", margin: 0 }}>
+            &ldquo;Eat good{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+            {" "}that&apos;s way{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+            {" "}Serves good and{" "}
+            <span style={{ color: "#E4002B", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+            &rdquo;
+          </p>
         </div>
       </div>
 

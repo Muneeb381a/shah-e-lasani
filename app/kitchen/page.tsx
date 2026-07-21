@@ -70,7 +70,21 @@ export default function KitchenPage() {
           }} />
 
           <p style={{
-            color: "rgba(255,255,255,0.82)", fontSize: "clamp(0.9rem, 2.5vw, 1.15rem)",
+            color: "rgba(255,255,255,0.82)", fontSize: "clamp(0.85rem, 2vw, 1rem)",
+            maxWidth: 520, lineHeight: 1.75, marginBottom: 16,
+            textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+            fontStyle: "italic",
+          }}>
+            &ldquo;Eat good{" "}
+            <span style={{ color: "#ff6b6b", fontWeight: 700, fontStyle: "normal" }}>Feel good</span>
+            {" "}that&apos;s way{" "}
+            <span style={{ color: "#ff6b6b", fontWeight: 700, fontStyle: "normal" }}>Shah-E-Lasani Cafe</span>
+            {" "}Serves good and{" "}
+            <span style={{ color: "#ff6b6b", fontWeight: 700, fontStyle: "normal" }}>hygienic food</span>
+            &rdquo;
+          </p>
+          <p style={{
+            color: "rgba(255,255,255,0.65)", fontSize: "clamp(0.85rem, 2vw, 1rem)",
             maxWidth: 520, lineHeight: 1.7, marginBottom: 36,
             textShadow: "0 2px 12px rgba(0,0,0,0.5)",
           }}>
